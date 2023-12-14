@@ -1,4 +1,5 @@
 import 'package:CareCompanion/screens/home_page.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -49,8 +50,6 @@ class _FilePageState extends State<FilePage> {
     'Tunis',
     'Zaghouan',
   ];
-
-
 
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
@@ -171,7 +170,8 @@ class _FilePageState extends State<FilePage> {
                   ),
                   suffixIcon: Icon(Icons.location_on, color: Colors.white),
                 ),
-                items: tunisiaStates.map<DropdownMenuItem<String>>((String value) {
+                items:
+                    tunisiaStates.map<DropdownMenuItem<String>>((String value) {
                   return DropdownMenuItem<String>(
                     value: value,
                     child: Text(
@@ -198,7 +198,8 @@ class _FilePageState extends State<FilePage> {
                 dense: true,
               ),
               RadioListTile<Gender>(
-                title: const Text('Masculin', style: TextStyle(color: Colors.white)),
+                title: const Text('Masculin',
+                    style: TextStyle(color: Colors.white)),
                 value: Gender.male,
                 groupValue: selectedGender,
                 onChanged: (Gender? value) {
@@ -208,7 +209,8 @@ class _FilePageState extends State<FilePage> {
                 },
               ),
               RadioListTile<Gender>(
-                title: const Text('Féminin', style: TextStyle(color: Colors.white)),
+                title: const Text('Féminin',
+                    style: TextStyle(color: Colors.white)),
                 value: Gender.female,
                 groupValue: selectedGender,
                 onChanged: (Gender? value) {
@@ -277,7 +279,8 @@ class _FilePageState extends State<FilePage> {
                   _submitForm();
                 },
                 style: ElevatedButton.styleFrom(
-                  foregroundColor: Colors.white, backgroundColor: Colors.blue,
+                  foregroundColor: Colors.white,
+                  backgroundColor: Colors.blue,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(30),
                   ),
@@ -294,35 +297,47 @@ class _FilePageState extends State<FilePage> {
   Future<void> _submitForm() async {
     if (formKey.currentState!.validate()) {
       try {
-        await FirebaseFirestore.instance.collection('user_info').add({
-          'name': nameController.text,
-          'family_name': familyNameController.text,
-          'age': int.tryParse(ageController.text) ?? 0,
-          'gender': selectedGender.toString().split('.').last,
-          'has_chromatic_disease': hasChromaticDisease,
-          'chromatic_diseases': hasChromaticDisease ? diseasesController.text : null,
-          'is_taking_medicine': isTakingMedicine,
-          'medicines': isTakingMedicine ? medicinesController.text : null,
-        });
+        // Get the current authenticated user
+        User? currentUser = FirebaseAuth.instance.currentUser;
 
-        // Clear the text fields after submission
-        nameController.clear();
-        familyNameController.clear();
-        ageController.clear();
-        diseasesController.clear();
-        medicinesController.clear();
+        if (currentUser != null) {
+          // Reference to the users collection in Firestore
+          CollectionReference patientsData =
+              FirebaseFirestore.instance.collection('user_info');
 
-        setState(() {
-          selectedGender = null;
-          hasChromaticDisease = false;
-          isTakingMedicine = false;
-        });
+          // Add the form data to the user's document in the 'patientsData' collection
+          await patientsData.doc(currentUser.uid).set({
+            'name': nameController.text,
+            'family_name': familyNameController.text,
+            'age': int.tryParse(ageController.text) ?? 0,
+            'gender': selectedGender.toString().split('.').last,
+            'has_chromatic_disease': hasChromaticDisease,
+            'chromatic_diseases':
+                hasChromaticDisease ? diseasesController.text : null,
+            'is_taking_medicine': isTakingMedicine,
+            'medicines': isTakingMedicine ? medicinesController.text : null,
+          });
 
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const HomePage(username: '',)), // Replace with your HomePage widget
-        );
-        
+          // Clear the text fields after submission
+          nameController.clear();
+          familyNameController.clear();
+          ageController.clear();
+          diseasesController.clear();
+          medicinesController.clear();
+
+          setState(() {
+            selectedGender = null;
+            hasChromaticDisease = false;
+            isTakingMedicine = false;
+          });
+
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+                builder: (context) =>
+                    const HomePage()), // Replace with your HomePage widget
+          );
+        }
       } catch (e) {
         print('Error submitting form: $e');
       }

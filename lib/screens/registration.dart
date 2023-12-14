@@ -51,23 +51,6 @@ class _RegisterPageState extends State<RegisterPage> {
     loadRememberMe();
   }
 
-  Future<String> getUserNameFromFirestore(String userId) async {
-  try {
-    DocumentSnapshot userDoc = await FirebaseFirestore.instance
-        .collection('PatientsData')
-        .doc(userId)
-        .get();
-
-    if (userDoc.exists) {
-      return userDoc['username'] ?? ''; // Replace 'username' with the field name in Firestore
-    } else {
-      return '';
-    }
-  } catch (e) {
-    print('Error retrieving username: $e');
-    return '';
-  }
-}
   
   Future<void> loadRememberMe() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -144,22 +127,19 @@ class _RegisterPageState extends State<RegisterPage> {
   }
 
   Future<bool> checkIfUserFilledForm(String userId) async {
-  try {
-    // Reference your Firestore collection where user information is stored
-    CollectionReference userCollection =
-        FirebaseFirestore.instance.collection('user_info');
+    try {
+      CollectionReference userCollection =
+          FirebaseFirestore.instance.collection('user_info');
 
-    // Check if a document exists for the current user ID
-    DocumentSnapshot userDoc =
-        await userCollection.doc(userId).get();
+      DocumentSnapshot userDoc =
+          await userCollection.doc(userId).get();
 
-    // Return true if the document exists (user filled the form), false otherwise
-    return userDoc.exists;
-  } catch (e) {
-    print('Error checking user form: $e');
-    return false; // Return false in case of any error or no document found
+      return userDoc.exists; // Return true if the document exists (form filled)
+    } catch (e) {
+      print('Error checking user form: $e');
+      return false;
+    }
   }
-}
 
   Future<void> _signInAfterVerification() async {
   try {
@@ -170,20 +150,28 @@ class _RegisterPageState extends State<RegisterPage> {
     );
 
     if (signInCredential.user != null && signInCredential.user!.emailVerified) {
-      String userId = signInCredential.user!.uid;
-      String username = await getUserNameFromFirestore(userId);
-        // Save 'rememberMe' preference before navigating to HomePage
-        await saveRememberMe();
+      bool isFormFilled = await checkIfUserFilledForm(signInCredential.user!.uid);
 
-        // Navigate to HomePage
+      await saveRememberMe();
+
+      if (isFormFilled) {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => HomePage(username: username)),
+          MaterialPageRoute(builder: (context) => HomePage()),
         ).then((_) {
           emailController.clear();
           passwordController.clear();
         });
       } else {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => FilePage()), // Replace with your form page
+        ).then((_) {
+          emailController.clear();
+          passwordController.clear();
+        });
+      }
+    } else {
       // Show the email not verified dialog
       if (!signInCredential.user!.emailVerified) {
         showDialog(
@@ -247,6 +235,7 @@ class _RegisterPageState extends State<RegisterPage> {
     print(e);
   }
 }
+
 
 
 

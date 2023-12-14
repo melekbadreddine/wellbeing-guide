@@ -72,7 +72,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                             if (_pageIndex == slidesList.length - 1) {
                               Navigator.of(context).pushReplacement(
                                 MaterialPageRoute(
-                                  builder: (context) => const HomePage(username: '',),
+                                  builder: (context) => const HomePage(),
                                 ),
                               );
                             }

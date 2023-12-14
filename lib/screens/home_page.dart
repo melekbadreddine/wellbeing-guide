@@ -1,3 +1,5 @@
+import 'package:CareCompanion/screens/more.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -5,14 +7,40 @@ import '../widgets/doctor_item.dart';
 import '../widgets/specialist_item.dart';
 
 class HomePage extends StatefulWidget {
-  final String username;
-  const HomePage({Key? key, required this.username}) : super(key: key);
+  const HomePage({Key? key}) : super(key: key);
 
   @override
   State<HomePage> createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
+
+  String? username; // Variable to store the username
+  int _selectedIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    fetchUsername(); // Fetch the username when the widget initializes
+  }
+
+  Future<void> fetchUsername() async {
+    // Get the current user ID
+    String? userId = FirebaseAuth.instance.currentUser?.uid;
+
+    if (userId != null) {
+      // Retrieve the user's data from Firestore using the userId
+      DocumentSnapshot<Map<String, dynamic>> userData =
+          await FirebaseFirestore.instance.collection('user_info').doc(userId).get();
+
+      // Update the username variable with the retrieved username
+      setState(() {
+        username = userData['name'] ?? 'Loading...'; // Assuming 'name' is a field in the document
+      });
+    }
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -57,9 +85,8 @@ class _HomePageState extends State<HomePage> {
               style: TextStyle(color: Colors.black),
             ),
             Text(
-              widget.username, // Display the username
-              style:
-                  TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+              username ?? 'Loading...',
+              style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
             ),
           ],
         ),
@@ -68,6 +95,21 @@ class _HomePageState extends State<HomePage> {
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         iconSize: 24,
+        currentIndex: _selectedIndex,
+        onTap: (int index) {
+          if (index == 3) {
+            // Navigate to the "More" page when the "More" icon is tapped
+            Navigator.push(context, MaterialPageRoute(builder: (context) {
+              return MorePage();
+            }));
+          } else {
+            // Handle navigation for other icons
+            setState(() {
+              _selectedIndex = index;
+              // Add navigation logic for other icons if needed
+            });
+          }
+        },
         items: const [
           BottomNavigationBarItem(
             icon: Icon(
@@ -92,7 +134,7 @@ class _HomePageState extends State<HomePage> {
           ),
           BottomNavigationBarItem(
             icon: Icon(
-              Icons.notifications_none_outlined,
+              Icons.more_horiz_outlined,
               color: Colors.black54,
             ),
             label: '',
