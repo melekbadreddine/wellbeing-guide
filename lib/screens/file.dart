@@ -89,18 +89,24 @@ class _FilePageState extends State<FilePage> {
         child: Form(
           key: formKey,
           child: ListView(
+            padding: const EdgeInsets.all(16.0),
             children: <Widget>[
+              SizedBox(
+                height: 16.0,
+              ),
               TextFormField(
                 controller: nameController,
                 style: const TextStyle(color: Colors.white),
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   labelText: 'Prénom',
-                  labelStyle: TextStyle(color: Colors.white),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white),
+                  labelStyle: const TextStyle(color: Colors.white),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(30.0),
+                    borderSide: const BorderSide(color: Colors.white),
                   ),
                   focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white),
+                    borderRadius: BorderRadius.circular(30.0),
+                    borderSide: const BorderSide(color: Colors.white),
                   ),
                 ),
                 validator: (value) {
@@ -110,17 +116,20 @@ class _FilePageState extends State<FilePage> {
                   return null;
                 },
               ),
+              SizedBox(height: 16.0),
               TextFormField(
                 controller: familyNameController,
                 style: const TextStyle(color: Colors.white),
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   labelText: 'Nom de famille',
-                  labelStyle: TextStyle(color: Colors.white),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white),
+                  labelStyle: const TextStyle(color: Colors.white),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(30.0),
+                    borderSide: const BorderSide(color: Colors.white),
                   ),
                   focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white),
+                    borderRadius: BorderRadius.circular(30.0),
+                    borderSide: const BorderSide(color: Colors.white),
                   ),
                 ),
                 validator: (value) {
@@ -130,6 +139,7 @@ class _FilePageState extends State<FilePage> {
                   return null;
                 },
               ),
+              SizedBox(height: 16.0),
               TextFormField(
                 readOnly: true,
                 onTap: () {
@@ -140,11 +150,13 @@ class _FilePageState extends State<FilePage> {
                 decoration: InputDecoration(
                   labelText: 'Age',
                   labelStyle: const TextStyle(color: Colors.white),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(30.0),
+                    borderSide: const BorderSide(color: Colors.white),
                   ),
                   focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white),
+                    borderRadius: BorderRadius.circular(30.0),
+                    borderSide: const BorderSide(color: Colors.white),
                   ),
                   suffixIcon: Icon(Icons.calendar_today, color: Colors.white),
                 ),
@@ -155,31 +167,35 @@ class _FilePageState extends State<FilePage> {
                   return null;
                 },
               ),
-
-              // 'Adresse' TextFormField with location icon on the right side
+              SizedBox(height: 16.0),
               DropdownButtonFormField<String>(
                 value: selectedState,
+                style: TextStyle(color: Colors.white), // Text color for the input field
                 decoration: InputDecoration(
-                  labelText: 'Adresse',
+                  labelText: 'Gouvernorat',
                   labelStyle: const TextStyle(color: Colors.white),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(30.0),
+                    borderSide: const BorderSide(color: Colors.white),
                   ),
                   focusedBorder: OutlineInputBorder(
-                    borderSide: BorderSide(color: Colors.white),
+                    borderRadius: BorderRadius.circular(30.0),
+                    borderSide: const BorderSide(color: Colors.white),
                   ),
                   suffixIcon: Icon(Icons.location_on, color: Colors.white),
                 ),
-                items:
-                    tunisiaStates.map<DropdownMenuItem<String>>((String value) {
+                items: tunisiaStates.map<DropdownMenuItem<String>>((String value) {
                   return DropdownMenuItem<String>(
                     value: value,
                     child: Text(
                       value,
-                      style: const TextStyle(color: Colors.white),
+                      style: TextStyle(
+                        color: Colors.black, // Text color for dropdown items
+                      ),
                     ),
                   );
                 }).toList(),
+                dropdownColor: Colors.white, // Background color for dropdown menu
                 onChanged: (String? value) {
                   setState(() {
                     selectedState = value;
@@ -187,38 +203,52 @@ class _FilePageState extends State<FilePage> {
                 },
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Please select your state';
+                    return 'Veuillez sélectionner votre gouvernorat';
                   }
                   return null;
                 },
               ),
-
-              const ListTile(
-                title: Text('Genre', style: TextStyle(color: Colors.white)),
-                dense: true,
-              ),
-              RadioListTile<Gender>(
-                title: const Text('Masculin',
-                    style: TextStyle(color: Colors.white)),
-                value: Gender.male,
-                groupValue: selectedGender,
+              SizedBox(height: 16.0),
+              DropdownButtonFormField<Gender>(
+                value: selectedGender,
+                style: TextStyle(color: Colors.white), // Text color for the input field
+                decoration: InputDecoration(
+                  labelText: 'Genre',
+                  labelStyle: const TextStyle(color: Colors.white),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(30.0),
+                    borderSide: const BorderSide(color: Colors.white),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(30.0),
+                    borderSide: const BorderSide(color: Colors.white),
+                  ),
+                ),
+                items: Gender.values.map<DropdownMenuItem<Gender>>((Gender value) {
+                  return DropdownMenuItem<Gender>(
+                    value: value,
+                    child: Text(
+                      value == Gender.male ? 'Masculin' : 'Féminin',
+                      style: TextStyle(
+                        color: Colors.black, // Text color for dropdown items
+                      ),
+                    ),
+                  );
+                }).toList(),
+                dropdownColor: Colors.white, // Background color for dropdown menu
                 onChanged: (Gender? value) {
                   setState(() {
                     selectedGender = value;
                   });
                 },
-              ),
-              RadioListTile<Gender>(
-                title: const Text('Féminin',
-                    style: TextStyle(color: Colors.white)),
-                value: Gender.female,
-                groupValue: selectedGender,
-                onChanged: (Gender? value) {
-                  setState(() {
-                    selectedGender = value;
-                  });
+                validator: (value) {
+                  if (value == null) {
+                    return 'Please select a genre';
+                  }
+                  return null;
                 },
               ),
+              SizedBox(height: 16.0),
               CheckboxListTile(
                 title: const Text(
                   'Avez-vous des maladies chroniques ?',
@@ -235,17 +265,20 @@ class _FilePageState extends State<FilePage> {
                 TextFormField(
                   controller: diseasesController,
                   style: const TextStyle(color: Colors.white),
-                  decoration: const InputDecoration(
-                    labelText: 'Maladies chromatiques',
-                    labelStyle: TextStyle(color: Colors.white),
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.white),
+                  decoration: InputDecoration(
+                    labelText: 'Maladies chroniques',
+                    labelStyle: const TextStyle(color: Colors.white),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(30.0),
+                      borderSide: const BorderSide(color: Colors.white),
                     ),
                     focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.white),
+                      borderRadius: BorderRadius.circular(30.0),
+                      borderSide: const BorderSide(color: Colors.white),
                     ),
                   ),
                 ),
+              SizedBox(height: 16.0),
               CheckboxListTile(
                 title: const Text(
                   'Prenez-vous des médicaments ?',
@@ -262,31 +295,44 @@ class _FilePageState extends State<FilePage> {
                 TextFormField(
                   controller: medicinesController,
                   style: const TextStyle(color: Colors.white),
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     labelText: 'Médicaments',
-                    labelStyle: TextStyle(color: Colors.white),
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.white),
+                    labelStyle: const TextStyle(color: Colors.white),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(30.0),
+                      borderSide: const BorderSide(color: Colors.white),
                     ),
                     focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.white),
+                      borderRadius: BorderRadius.circular(30.0),
+                      borderSide: const BorderSide(color: Colors.white),
                     ),
                   ),
                 ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () {
-                  _submitForm();
-                },
-                style: ElevatedButton.styleFrom(
-                  foregroundColor: Colors.white,
-                  backgroundColor: Colors.blue,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30),
+              SizedBox(height: 16.0),
+              SizedBox(
+                width: double.infinity, // Set the desired width
+                height: 40, // Set the desired height
+                child: ElevatedButton(
+                  onPressed: () {
+                    _submitForm();
+                  },
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.blue,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                  ),
+                  child: Text(
+                    'Soumettre',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 18,
+                      fontWeight: FontWeight.normal,
+                    ),
                   ),
                 ),
-                child: const Text('Soumettre'),
               ),
+              SizedBox(height: 16.0),
             ],
           ),
         ),

@@ -79,17 +79,34 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
         title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
-              'Salut, ',
-              style: TextStyle(color: Colors.black),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "Salut,",
+                  style: TextStyle(
+                    color: Colors.black54,
+                    fontSize: 16,
+                  ),
+                ),
+                SizedBox(
+                  height: 4,
+                ),
+                Text(
+                  username ?? 'Loading...',
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20,
+                  ),
+                ),
+              ],
             ),
-            Text(
-              username ?? 'Loading...',
-              style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
-            ),
+            // Add other widgets if needed in the Row
           ],
-        ),
+        )
       ),
       backgroundColor: Colors.white,
       bottomNavigationBar: BottomNavigationBar(
@@ -163,7 +180,7 @@ class _HomePageState extends State<HomePage> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     Image.asset(
-                      "assets/images/surgeon.png",
+                      "assets/images/chatbot.png",
                       width: 92,
                       height: 100,
                     ),
@@ -217,68 +234,6 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
               const SizedBox(height: 20),
-              Container(
-                padding: const EdgeInsets.only(left: 16),
-                height: 64,
-                decoration: BoxDecoration(
-                  color: const Color.fromARGB(95, 179, 173, 173),
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: Row(
-                  children: const [
-                    Icon(
-                      Icons.search,
-                      size: 32,
-                      color: Colors.black54,
-                    ),
-                    SizedBox(
-                      width: 12,
-                    ),
-                    Text(
-                      "How can we help you?",
-                      style: TextStyle(
-                        color: Colors.black54,
-                      ),
-                    )
-                  ],
-                ),
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              SizedBox(
-                height: 60,
-                child: ListView(
-                  scrollDirection: Axis.horizontal,
-                  children: const [
-                    SpecialistItem(
-                      imagePath: "assets/images/clean.png",
-                      imageName: "Dentist",
-                    ),
-                    SizedBox(
-                      width: 8,
-                    ),
-                    SpecialistItem(
-                      imagePath: "assets/images/knife.png",
-                      imageName: "Surgeon",
-                    ),
-                    SizedBox(
-                      width: 8,
-                    ),
-                    SpecialistItem(
-                      imagePath: "assets/images/lungs.png",
-                      imageName: "Therapy",
-                    ),
-                    SizedBox(
-                      width: 8,
-                    ),
-                    SpecialistItem(
-                      imagePath: "assets/images/hormones.png",
-                      imageName: "Physiologist",
-                    ),
-                  ],
-                ),
-              ),
               const SizedBox(
                 height: 20,
               ),
@@ -286,7 +241,7 @@ class _HomePageState extends State<HomePage> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: const [
                   Text(
-                    "Doctor list",
+                    "Liste des exercices",
                     style: TextStyle(
                       color: Colors.black,
                       fontWeight: FontWeight.bold,
@@ -312,7 +267,7 @@ class _HomePageState extends State<HomePage> {
                   children: const [
                     DoctorItem(
                       image: "assets/images/1.png",
-                      name: "Nycta Gina",
+                      name: "Relaxation",
                       specialist: "Pediatrician",
                     ),
                     DoctorItem(
@@ -332,7 +287,58 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ],
                 ),
-              )
+              ),
+              const SizedBox(height: 12),
+              const SizedBox(
+                height: 30,
+              ),
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 16,
+                ),
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: AssetImage("assets/images/main.jpg"),
+                    fit: BoxFit.cover,
+                    colorFilter: ColorFilter.mode(
+                    Colors.black.withOpacity(0.2), // Adjust the opacity as needed (from 0.0 to 1.0)
+                      BlendMode.darken,
+                    ),
+                  ),
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Image.asset(
+                      "assets/images/doc.png",
+                      width: 92,
+                      height: 100,
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        
+                        const SizedBox(
+                          width: 160,
+                          child: Text(
+                            "Contactez un docteur",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
             ],
           ),
         ),
