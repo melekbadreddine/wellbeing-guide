@@ -261,29 +261,29 @@ class _HomePageState extends State<HomePage> {
                 height: 20,
               ),
               SizedBox(
-                height: 200,
+                height: 205,
                 child: ListView(
                   scrollDirection: Axis.horizontal,
                   children: const [
-                    DoctorItem(
-                      image: "assets/images/1.png",
-                      name: "Relaxation",
-                      specialist: "Pediatrician",
+                    ExerciseItem(
+                      image: "assets/images/breathing.png",
+                      title: "Respiration",
+                      description: "Pratiquez des respirations lentes.",
                     ),
-                    DoctorItem(
-                      image: "assets/images/3.png",
-                      name: "Reisa Broto Asmoro",
-                      specialist: "Surgeon",
+                    ExerciseItem(
+                      image: "assets/images/meditation.png",
+                      title: "Méditation",
+                      description: "Focalisez l'esprit, détendez-vous.",
                     ),
-                    DoctorItem(
-                      image: "assets/images/2.png",
-                      name: "Indah Kusumaningrum",
-                      specialist: "Odontologist",
+                    ExerciseItem(
+                      image: "assets/images/stretching.png",
+                      title: "Étirements",
+                      description: "Étirements doux pour la détente.",
                     ),
-                    DoctorItem(
-                      image: "assets/images/4.png",
-                      name: "Mesty Ariotedjo",
-                      specialist: "Ophtamologist",
+                    ExerciseItem(
+                      image: "assets/images/yoga.png",
+                      title: "Yoga",
+                      description: "Pratiquez des postures apaisantes.",
                     ),
                   ],
                 ),

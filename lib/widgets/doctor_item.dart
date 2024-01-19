@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 
-class DoctorItem extends StatelessWidget {
+class ExerciseItem extends StatelessWidget {
   final String image;
-  final String name;
-  final String specialist;
-  const DoctorItem({
+  final String title;
+  final String description;
+
+  const ExerciseItem({
     Key? key,
     required this.image,
-    required this.name,
-    required this.specialist,
+    required this.title,
+    required this.description,
   }) : super(key: key);
 
   @override
@@ -18,8 +19,9 @@ class DoctorItem extends StatelessWidget {
       child: Container(
         width: 160,
         decoration: BoxDecoration(
-            color: const Color.fromARGB(95, 179, 173, 173),
-            borderRadius: BorderRadius.circular(15.0)),
+          color: const Color.fromARGB(95, 179, 173, 173),
+          borderRadius: BorderRadius.circular(15.0),
+        ),
         padding: const EdgeInsets.symmetric(horizontal: 14.0, vertical: 14.0),
         child: Column(
           children: [
@@ -31,20 +33,21 @@ class DoctorItem extends StatelessWidget {
               height: 10,
             ),
             Text(
-              "Dr. $name",
+              title,
               overflow: TextOverflow.fade,
               maxLines: 2,
               textAlign: TextAlign.center,
               style: const TextStyle(
-                  color: Colors.black,
-                  fontWeight: FontWeight.w500,
-                  fontSize: 16),
+                color: Colors.black,
+                fontWeight: FontWeight.w500,
+                fontSize: 16,
+              ),
             ),
             const SizedBox(
               height: 5,
             ),
             Text(
-              specialist,
+              description,
               textAlign: TextAlign.center,
               style: const TextStyle(color: Colors.black54),
             )
