@@ -117,7 +117,7 @@ class _HomePageState extends State<HomePage> {
           if (index == 3) {
             // Navigate to the "More" page when the "More" icon is tapped
             Navigator.push(context, MaterialPageRoute(builder: (context) {
-              return MorePage();
+              return MorePage(username: username,);
             }));
           } else {
             // Handle navigation for other icons
