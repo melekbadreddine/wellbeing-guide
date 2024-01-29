@@ -25,4 +25,5 @@ jobs:
       - name: Run tests
         run: flutter test
 
-  # Add additional steps for linting, building, and deploying your Flutter app
+      - name: Build APK
+        run: flutter build apk
