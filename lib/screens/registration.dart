@@ -1,4 +1,4 @@
-import 'package:CareCompanion/screens/forgot.dart';
+import 'package:CareCompanion/screens/reset_password.dart';
 import 'package:CareCompanion/screens/home_page.dart';
 import 'package:CareCompanion/screens/signup.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
