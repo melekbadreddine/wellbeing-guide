@@ -1,3 +1,4 @@
+import 'package:CareCompanion/screens/formulaire.dart';
 import 'package:CareCompanion/screens/home_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -380,8 +381,7 @@ class _FilePageState extends State<FilePage> {
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(
-                builder: (context) =>
-                    const HomePage()), // Replace with your HomePage widget
+                builder: (context) => const MyForm()), // Replace with your HomePage widget
           );
         }
       } catch (e) {
