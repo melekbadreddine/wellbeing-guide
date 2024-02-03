@@ -1,3 +1,4 @@
+import 'package:CareCompanion/screens/home_page.dart';
 import 'package:CareCompanion/screens/settings.dart';
 import 'package:flutter/material.dart';
 
@@ -18,7 +19,14 @@ class CustomBottomNavigationBar extends StatelessWidget {
       iconSize: 24,
       currentIndex: currentIndex,
       onTap: (int index) {
-        if (index == 3) {
+        // Redirect to HomePage() when clicking on the home icon
+      if (index == 0) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => HomePage()),
+        );
+      }
+      else if (index == 3) {
           // Navigate to the "More" page when the "More" icon is tapped
           Navigator.push(context, MaterialPageRoute(builder: (context) {
             return SettingsScreen();

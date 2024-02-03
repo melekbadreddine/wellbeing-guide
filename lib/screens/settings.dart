@@ -10,11 +10,9 @@ class SettingsScreen extends StatefulWidget {
 
   @override
   State<SettingsScreen> createState() => _SettingsScreenState();
-
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
-
   int _selectedIndex = 3; // Initial index for the "More" page
   String? username;
 
@@ -35,7 +33,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(),
+      appBar: CustomAppBar(
+        fetchUsername: fetchUsername,
+        onSearchPressed: () {
+          // Handle search icon tap
+        },
+        onNotificationPressed: () {
+          // Handle notification icon tap
+        },
+      ),
       body: SafeArea(
         child: Center(
           child: Padding(

@@ -1,5 +1,7 @@
 import 'package:CareCompanion/screens/more.dart';
 import 'package:CareCompanion/screens/settings.dart';
+import 'package:CareCompanion/widgets/custom_app_bar.dart';
+import 'package:CareCompanion/widgets/custom_bottom_navigation_bar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -25,140 +27,19 @@ class _HomePageState extends State<HomePage> {
     fetchUsername(); // Fetch the username when the widget initializes
   }
 
-  Future<void> fetchUsername() async {
-    // Get the current user ID
-    String? userId = FirebaseAuth.instance.currentUser?.uid;
-
-    if (userId != null) {
-      // Retrieve the user's data from Firestore using the userId
-      DocumentSnapshot<Map<String, dynamic>> userData =
-          await FirebaseFirestore.instance.collection('user_info').doc(userId).get();
-
-      // Update the username variable with the retrieved username
-      setState(() {
-        username = userData['name'] ?? 'Loading...'; // Assuming 'name' is a field in the document
-      });
-    }
-  }
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.white,
-        elevation: 0,
-        leading: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: CircleAvatar(
-            radius: 20,
-            backgroundColor: Colors.grey,
-            child: CircleAvatar(
-              radius: 18,
-              backgroundImage: AssetImage("assets/images/pm.png"),
-            ),
-          ),
-        ),
-        actions: [
-          IconButton(
-            onPressed: () {
-              // Handle search icon tap
-            },
-            icon: Icon(
-              Icons.search,
-              color: Colors.black54,
-            ),
-          ),
-          IconButton(
-            onPressed: () {
-              // Handle notification icon tap
-            },
-            icon: Icon(
-              Icons.notifications_none_outlined,
-              color: Colors.black54,
-            ),
-          ),
-        ],
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  "Salut,",
-                  style: TextStyle(
-                    color: Colors.black54,
-                    fontSize: 16,
-                  ),
-                ),
-                SizedBox(
-                  height: 4,
-                ),
-                Text(
-                  username ?? 'Loading...',
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20,
-                  ),
-                ),
-              ],
-            ),
-            // Add other widgets if needed in the Row
-          ],
-        )
+      appBar: CustomAppBar(
+        fetchUsername: fetchUsername,
+        onSearchPressed: () {
+          // Handle search icon tap
+        },
+        onNotificationPressed: () {
+          // Handle notification icon tap
+        },
       ),
       backgroundColor: Colors.white,
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        iconSize: 24,
-        currentIndex: _selectedIndex,
-        onTap: (int index) {
-          if (index == 3) {
-            // Navigate to the "More" page when the "More" icon is tapped
-            Navigator.push(context, MaterialPageRoute(builder: (context) {
-              return SettingsScreen();
-            }));
-          } else {
-            // Handle navigation for other icons
-            setState(() {
-              _selectedIndex = index;
-              // Add navigation logic for other icons if needed
-            });
-          }
-        },
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(
-              Icons.home_outlined,
-              color: Colors.black54,
-            ),
-            label: '',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(
-              Icons.calendar_month_outlined,
-              color: Colors.black54,
-            ),
-            label: '',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(
-              Icons.chat_bubble_outline,
-              color: Colors.black54,
-            ),
-            label: '',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(
-              Icons.more_horiz_outlined,
-              color: Colors.black54,
-            ),
-            label: '',
-          ),
-        ],
-      ),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -343,6 +224,14 @@ class _HomePageState extends State<HomePage> {
             ],
           ),
         ),
+      ),
+      bottomNavigationBar: CustomBottomNavigationBar(
+        currentIndex: _selectedIndex,
+        onTap: (index) {
+          setState(() {
+            _selectedIndex = index;
+          });
+        },
       ),
     );
   }
