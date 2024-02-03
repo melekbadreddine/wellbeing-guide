@@ -54,6 +54,21 @@ class _FilePageState extends State<FilePage> {
 
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
+  Future<bool> checkIfUserFilledForm(String userId) async {
+    try {
+      CollectionReference userCollection =
+          FirebaseFirestore.instance.collection('user_form');
+
+      DocumentSnapshot userDoc =
+          await userCollection.doc(userId).get();
+
+      return userDoc.exists; // Return true if the document exists (form filled)
+    } catch (e) {
+      print('Error checking user form: $e');
+      return false;
+    }
+  }
+
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,
@@ -377,12 +392,20 @@ class _FilePageState extends State<FilePage> {
             hasChromaticDisease = false;
             isTakingMedicine = false;
           });
-
-          Navigator.pushReplacement(
+          if(await checkIfUserFilledForm(currentUser.uid)){
+            Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+                builder: (context) => const HomePage()), // Replace with your HomePage widget
+          );
+          }
+          else {
+            Navigator.pushReplacement(
             context,
             MaterialPageRoute(
                 builder: (context) => const MyForm()), // Replace with your HomePage widget
           );
+          }
         }
       } catch (e) {
         print('Error submitting form: $e');

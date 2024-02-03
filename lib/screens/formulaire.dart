@@ -1,3 +1,4 @@
+import 'package:CareCompanion/screens/home_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -284,6 +285,11 @@ class _MyFormState extends State<MyForm> {
           }, SetOptions(merge: true));
 
           print('Interpretation data saved to Firestore for user: ${currentUser.uid}');
+          // Navigate to the HomePage
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => HomePage()),
+          );
         } else {
           print('Error: User information not found for user ID: ${currentUser.uid}');
         }

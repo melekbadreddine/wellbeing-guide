@@ -8,7 +8,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:CareCompanion/screens/onboarding_screen.dart';
 import 'file.dart'; // Import the file.dart containing FilePage
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:CareCompanion/screens/formulaire.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
@@ -140,22 +140,8 @@ class _RegisterPageState extends State<RegisterPage> {
       return false;
     }
   }
-    Future<bool> checkIfUserFilledFormHAD(String userId) async {
-    try {
-      CollectionReference userCollection =
-          FirebaseFirestore.instance.collection('user_form');
 
-      DocumentSnapshot userDoc =
-          await userCollection.doc(userId).get();
-
-      return userDoc.exists; // Return true if the document exists (form filled)
-    } catch (e) {
-      print('Error checking user form: $e');
-      return false;
-    }
-  }
-
-Future<void> _signInAfterVerification() async {
+  Future<void> _signInAfterVerification() async {
   try {
     UserCredential signInCredential =
         await FirebaseAuth.instance.signInWithEmailAndPassword(
@@ -164,17 +150,27 @@ Future<void> _signInAfterVerification() async {
     );
 
     if (signInCredential.user != null && signInCredential.user!.emailVerified) {
-      // Save 'rememberMe' value
+      bool isFormFilled = await checkIfUserFilledForm(signInCredential.user!.uid);
+
       await saveRememberMe();
 
-      // Navigate to MyForm for both FilePage and detailed registration
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => MyForm()),
-      ).then((_) {
-        emailController.clear();
-        passwordController.clear();
-      });
+      if (isFormFilled) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => HomePage()),
+        ).then((_) {
+          emailController.clear();
+          passwordController.clear();
+        });
+      } else {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => FilePage()), // Replace with your form page
+        ).then((_) {
+          emailController.clear();
+          passwordController.clear();
+        });
+      }
     } else {
       // Show the email not verified dialog
       if (!signInCredential.user!.emailVerified) {
@@ -239,6 +235,9 @@ Future<void> _signInAfterVerification() async {
     print(e);
   }
 }
+
+
+
 
 
 
@@ -327,7 +326,7 @@ Future<void> _signInAfterVerification() async {
                               });
                             },
                           )
-                        : null, // If password is empty, hide the icons
+                        : null, // If password is empty, hide the icon
                   ),
                 ),
                 const SizedBox(height: 20),
