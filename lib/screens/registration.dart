@@ -327,7 +327,7 @@ Future<void> _signInAfterVerification() async {
                               });
                             },
                           )
-                        : null, // If password is empty, hide the icon
+                        : null, // If password is empty, hide the icons
                   ),
                 ),
                 const SizedBox(height: 20),
