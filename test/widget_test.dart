@@ -5,28 +5,27 @@
 // gestures. You can also use WidgetTester to find child widgets in the widget
 // tree, read text, and verify that the values of widget properties are correct.
 
+import 'package:CareCompanion/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:CareCompanion/main.dart';
-
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
+  testWidgets('Login test', (WidgetTester tester) async {
     // Build our app and trigger a frame.
     await tester.pumpWidget(const MyApp());
 
-    // Verify that our counter starts at the initial state.
-    expect(find.text('Initial Text'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+    // Verify that there is a widget with the expected text.
+    expect(find.text('Se Connecter'), findsOneWidget);
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
+    // Enter login credentials.
+    await tester.enterText(find.byType(TextFormField).first, 'mbadreddine5@gmail.com');
+    await tester.enterText(find.byType(TextFormField).last, 'password');
+
+    // Tap the login button and trigger a frame.
+    await tester.tap(find.widgetWithText(MaterialButton, 'Se Connecter'));
     await tester.pump();
 
-    // Verify that our counter has incremented.
-    expect(find.text('Initial Text'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    // Verify that the widget with the expected text is gone (logged in state).
+    expect(find.text('Se Connecter'), findsNothing);
   });
 }
-
-
