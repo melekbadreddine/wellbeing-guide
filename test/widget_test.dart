@@ -11,20 +11,20 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:CareCompanion/main.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
+  testWidgets('Your Widget Test', (WidgetTester tester) async {
+    // Build your app and trigger a frame.
     await tester.pumpWidget(const MyApp());
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+    // Verify the initial state of your widget.
+    expect(find.text('Initial Text'), findsOneWidget);
+    expect(find.text('Updated Text'), findsNothing);
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
+    // Trigger an interaction, such as tapping a button, and trigger a frame.
+    await tester.tap(find.byKey(const Key('your_button_key')));
     await tester.pump();
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    // Verify the updated state of your widget.
+    expect(find.text('Initial Text'), findsNothing);
+    expect(find.text('Updated Text'), findsOneWidget);
   });
 }
