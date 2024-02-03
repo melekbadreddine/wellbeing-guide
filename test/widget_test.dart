@@ -5,9 +5,9 @@
 // gestures. You can also use WidgetTester to find child widgets in the widget
 // tree, read text, and verify that the values of widget properties are correct.
 
-import 'package:CareCompanion/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:CareCompanion/main.dart';
 
 void main() {
   testWidgets('Login test', (WidgetTester tester) async {
@@ -23,9 +23,14 @@ void main() {
 
     // Tap the login button and trigger a frame.
     await tester.tap(find.widgetWithText(MaterialButton, 'Se Connecter'));
-    await tester.pump();
+    await tester.pumpAndSettle(); // Wait for animations/transitions to complete.
 
     // Verify that the widget with the expected text is gone (logged in state).
     expect(find.text('Se Connecter'), findsNothing);
+
+    // Now, check for a widget on the new screen (replace with actual widget details).
+    expect(find.text('Welcome, User!'), findsOneWidget);
   });
 }
+
+
