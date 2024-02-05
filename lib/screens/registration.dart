@@ -246,12 +246,9 @@ class _RegisterPageState extends State<RegisterPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        decoration: const BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage("assets/images/appBackground.png"),
-            fit: BoxFit.cover,
-          ),
-        ),
+        decoration: BoxDecoration(
+        color: Colors.teal[300], // Set your desired color here
+  ),
         padding: const EdgeInsets.all(16.0),
         child: Padding(
           padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
@@ -265,14 +262,14 @@ class _RegisterPageState extends State<RegisterPage> {
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 26,
-                    color: Colors.white,
+                    color: Colors.black,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
                 const SizedBox(height: 50),
                 TextFormField(
                   controller: emailController,
-                  style: const TextStyle(color: Colors.white),
+                  style: const TextStyle(color: Colors.black),
                   validator: (value) {
                     if (value!.isEmpty || !value.contains('@')) {
                       return 'Veuillez entrer un e-mail valide';
@@ -280,20 +277,21 @@ class _RegisterPageState extends State<RegisterPage> {
                     return null;
                   },
                   keyboardType: TextInputType.emailAddress,
-                  decoration: const InputDecoration(
-                    labelStyle: TextStyle(color: Colors.white),
+                  decoration: InputDecoration(
+                    labelStyle: const TextStyle(color: Colors.black),
+                    filled: true,
+                    fillColor: Colors.white, // Background color of the input field
                     border: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.white),
+                      borderSide: const BorderSide(color: Colors.black),
                       borderRadius: BorderRadius.all(Radius.circular(30)),
                     ),
-                    labelText: 'E-mail',
                     hintText: 'Entrez votre e-mail',
                   ),
                 ),
                 const SizedBox(height: 20),
                 TextFormField(
                   controller: passwordController,
-                  style: const TextStyle(color: Colors.white),
+                  style: const TextStyle(color: Colors.black),
                   onChanged: (value) {
                     setState(() {
                       isPasswordNotEmpty = value.isNotEmpty;
@@ -307,18 +305,19 @@ class _RegisterPageState extends State<RegisterPage> {
                   },
                   obscureText: _obscureText,
                   decoration: InputDecoration(
-                    labelStyle: const TextStyle(color: Colors.white),
+                    labelStyle: const TextStyle(color: Colors.black),
+                    filled: true,
+                    fillColor: Colors.white,
                     border: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.white),
+                      borderSide: BorderSide(color: Colors.black),
                       borderRadius: BorderRadius.all(Radius.circular(30)),
                     ),
-                    labelText: 'Mot de passe',
                     hintText: 'Entrez votre mot de passe',
                     suffixIcon: isPasswordNotEmpty
                         ? IconButton(
                             icon: Icon(
                               _obscureText ? Icons.visibility : Icons.visibility_off,
-                              color: Colors.white,
+                              color: Colors.black,
                             ),
                             onPressed: () {
                               setState(() {
@@ -345,7 +344,7 @@ class _RegisterPageState extends State<RegisterPage> {
                         ),
                         Text(
                           'Souvenir de moi',
-                          style: TextStyle(color: Colors.white),
+                          style: TextStyle(color: Colors.black),
                         ),
                       ],
                     ),
@@ -360,7 +359,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       child: const Text(
                         'Mot de passe oubliée ?',
                         style: TextStyle(
-                          color: Colors.white,
+                          color: Colors.black,
                           fontSize: 14,
                         ),
                       ),
@@ -371,13 +370,13 @@ class _RegisterPageState extends State<RegisterPage> {
                 MaterialButton(
                   height: 40,
                   shape: const StadiumBorder(),
-                  color: Colors.blue,
+                  color: Colors.white,
                   child: const Padding(
                     padding: EdgeInsets.all(16.0),
                     child: Text(
                       'Se Connecter',
                       style: TextStyle(
-                        color: Colors.white,
+                        color: Colors.cyan,
                         fontSize: 18,
                         fontWeight: FontWeight.normal,
                       ),
@@ -397,7 +396,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   },
                   child: const Text(
                     "Créer un compte",
-                    style: TextStyle(color: Colors.white),
+                    style: TextStyle(color: Colors.black),
                   ),
                 ),
               ],

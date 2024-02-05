@@ -55,7 +55,7 @@ class _HomePageState extends State<HomePage> {
                   vertical: 16,
                 ),
                 decoration: BoxDecoration(
-                  color: const Color.fromARGB(255, 223, 200, 228),
+                  color: Colors.cyan[100],
                   borderRadius: BorderRadius.circular(16),
                 ),
                 child: Row(
@@ -70,7 +70,7 @@ class _HomePageState extends State<HomePage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const Text(
-                          "How do you feel?",
+                          "Comment vous sentez?",
                           style: TextStyle(
                               color: Colors.black87,
                               fontSize: 20,
@@ -82,7 +82,7 @@ class _HomePageState extends State<HomePage> {
                         const SizedBox(
                           width: 120,
                           child: Text(
-                            "Fill out your medical right now",
+                            "parlez avec notre chatbot maintenant",
                             style: TextStyle(
                               color: Colors.black87,
                               fontSize: 12,
@@ -97,11 +97,11 @@ class _HomePageState extends State<HomePage> {
                           height: 35,
                           padding: const EdgeInsets.all(8.0),
                           decoration: BoxDecoration(
-                              color: Colors.blueAccent,
+                              color: Colors.cyan[300],
                               borderRadius: BorderRadius.circular(12.0)),
                           child: const Center(
                             child: Text(
-                              "Get Started",
+                              "Commencer",
                               style: TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.w400,
@@ -131,7 +131,7 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
                   Text(
-                    "See all",
+                    "Voir tous",
                     style: TextStyle(
                       color: Colors.black45,
                       fontSize: 16,
@@ -153,12 +153,12 @@ class _HomePageState extends State<HomePage> {
                       description: "Pratiquez des respirations lentes.",
                     ),
                     ExerciseItem(
-                      image: "assets/images/meditation.png",
+                      image: "assets/images/lotus-position.png",
                       title: "Méditation",
                       description: "Focalisez l'esprit, détendez-vous.",
                     ),
                     ExerciseItem(
-                      image: "assets/images/stretching.png",
+                      image: "assets/images/exercising.png",
                       title: "Étirements",
                       description: "Étirements doux pour la détente.",
                     ),

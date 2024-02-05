@@ -19,7 +19,7 @@ class ExerciseItem extends StatelessWidget {
       child: Container(
         width: 160,
         decoration: BoxDecoration(
-          color: const Color.fromARGB(95, 179, 173, 173),
+          color: Colors.cyan[100],
           borderRadius: BorderRadius.circular(15.0),
         ),
         padding: const EdgeInsets.symmetric(horizontal: 14.0, vertical: 14.0),

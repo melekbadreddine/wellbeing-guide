@@ -83,9 +83,19 @@ Future<String?> fetchUsername() async {
 
     if (currentUser != null) {
       DocumentSnapshot<Map<String, dynamic>> userInfoDoc =
-          await FirebaseFirestore.instance.collection('user_info').doc(currentUser.uid).get();
+          await FirebaseFirestore.instance
+              .collection('user_info')
+              .doc(currentUser.uid)
+              .get();
+      if (userInfoDoc.exists) {
+      // Check if the document exists
+      var username = userInfoDoc['name'] ?? '';
+      var familyName = userInfoDoc['family_name'] ?? '';
 
-      return userInfoDoc['name'] ?? 'Loading...';
+      if (username.isNotEmpty && familyName.isNotEmpty) {
+        return '$username $familyName';
+      }
+    }
     }
 
     return 'Loading...';

@@ -11,7 +11,6 @@ class SignUpPage extends StatefulWidget {
 }
 
 class _SignUpPageState extends State<SignUpPage> {
-  final TextEditingController usernameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController confirmPasswordController =
@@ -57,13 +56,6 @@ class _SignUpPageState extends State<SignUpPage> {
         // Send email verification
         await userCredential.user!.sendEmailVerification();
 
-        // Save user information to Firestore
-        await FirebaseFirestore.instance.collection('PatientsData').add({
-          'username': usernameController.text, // Save the username
-          // Add other fields as needed here
-          // 'field_name': field_value,
-        });
-
         showDialog(
           context: context,
           builder: (BuildContext context) {
@@ -100,7 +92,6 @@ class _SignUpPageState extends State<SignUpPage> {
 
   @override
   void dispose() {
-    usernameController.dispose();
     emailController.dispose();
     passwordController.dispose();
     confirmPasswordController.dispose();
@@ -128,28 +119,6 @@ class _SignUpPageState extends State<SignUpPage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                SizedBox(
-                  child: TextFormField(
-                    controller: usernameController,
-                    decoration: InputDecoration(
-                      labelText:
-                          'Nom d\'utilisateur', // Change 'Username' to 'Nom d'utilisateur'
-                      hintText: 'Entrez un nom d\'utilisateur',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(30.0),
-                      ),
-                      labelStyle: const TextStyle(color: Colors.white),
-                    ),
-                    style: const TextStyle(color: Colors.white),
-                    validator: (value) {
-                      if (value!.isEmpty) {
-                        return 'Veuillez entrer votre nom d\'utilisateur'; // Change 'Please enter your username' to 'Veuillez entrer votre nom d'utilisateur'
-                      }
-                      return null;
-                    },
-                  ),
-                ),
-                const SizedBox(height: 20),
                 SizedBox(
                   child: TextFormField(
                     controller: emailController,
