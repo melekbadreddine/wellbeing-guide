@@ -33,11 +33,8 @@ class _LoadingScreenState extends State<LoadingScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        decoration: const BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage("assets/images/appBackground.png"),
-            fit: BoxFit.cover,
-          ),
+        decoration: BoxDecoration(
+        color: Colors.teal[300], // Set your desired color here
         ),
         child: Center(
           child: Padding(
@@ -46,7 +43,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Image.asset(
-                  'assets/images/el-logo-white-r@2x.png',
+                  'assets/images/alfredHeadshot.png',
                   width: 120.0,
                   height: 120.0,
                 ),

@@ -92,15 +92,16 @@ class _FilePageState extends State<FilePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Informations utilisateur'),
-      ),
-      body: Container(
-        decoration: const BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage("assets/images/appBackground.png"),
-            fit: BoxFit.cover,
+        title: const Text(
+          'Informations utilisateur',
+          style: TextStyle(
+            color: Colors.white, // Change text color to cyan
           ),
         ),
+        backgroundColor: Colors.teal[300],
+        iconTheme: IconThemeData(color: Colors.white), // Change back arrow color to cyan
+      ),
+      body: Container(
         padding: const EdgeInsets.all(16.0),
         child: Form(
           key: formKey,
@@ -112,17 +113,17 @@ class _FilePageState extends State<FilePage> {
               ),
               TextFormField(
                 controller: nameController,
-                style: const TextStyle(color: Colors.white),
+                style: const TextStyle(color: Colors.black),
                 decoration: InputDecoration(
                   labelText: 'Prénom',
-                  labelStyle: const TextStyle(color: Colors.white),
+                  labelStyle: const TextStyle(color: Colors.black),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(30.0),
-                    borderSide: const BorderSide(color: Colors.white),
+                    borderSide: const BorderSide(color: Colors.black),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(30.0),
-                    borderSide: const BorderSide(color: Colors.white),
+                    borderSide: const BorderSide(color: Colors.black),
                   ),
                 ),
                 validator: (value) {
@@ -135,17 +136,17 @@ class _FilePageState extends State<FilePage> {
               SizedBox(height: 16.0),
               TextFormField(
                 controller: familyNameController,
-                style: const TextStyle(color: Colors.white),
+                style: const TextStyle(color: Colors.black),
                 decoration: InputDecoration(
                   labelText: 'Nom de famille',
-                  labelStyle: const TextStyle(color: Colors.white),
+                  labelStyle: const TextStyle(color: Colors.black),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(30.0),
-                    borderSide: const BorderSide(color: Colors.white),
+                    borderSide: const BorderSide(color: Colors.black),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(30.0),
-                    borderSide: const BorderSide(color: Colors.white),
+                    borderSide: const BorderSide(color: Colors.black),
                   ),
                 ),
                 validator: (value) {
@@ -162,19 +163,19 @@ class _FilePageState extends State<FilePage> {
                   _selectDate(context);
                 },
                 controller: ageController,
-                style: const TextStyle(color: Colors.white),
+                style: const TextStyle(color: Colors.black),
                 decoration: InputDecoration(
                   labelText: 'Age',
-                  labelStyle: const TextStyle(color: Colors.white),
+                  labelStyle: const TextStyle(color: Colors.black),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(30.0),
-                    borderSide: const BorderSide(color: Colors.white),
+                    borderSide: const BorderSide(color: Colors.black),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(30.0),
-                    borderSide: const BorderSide(color: Colors.white),
+                    borderSide: const BorderSide(color: Colors.black),
                   ),
-                  suffixIcon: Icon(Icons.calendar_today, color: Colors.white),
+                  suffixIcon: Icon(Icons.calendar_today, color: Colors.cyan),
                 ),
                 validator: (value) {
                   if (selectedDate == null) {
@@ -186,19 +187,19 @@ class _FilePageState extends State<FilePage> {
               SizedBox(height: 16.0),
               DropdownButtonFormField<String>(
                 value: selectedState,
-                style: TextStyle(color: Colors.white), // Text color for the input field
+                style: TextStyle(color: Colors.black), // Text color for the input field
                 decoration: InputDecoration(
                   labelText: 'Gouvernorat',
-                  labelStyle: const TextStyle(color: Colors.white),
+                  labelStyle: const TextStyle(color: Colors.black),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(30.0),
-                    borderSide: const BorderSide(color: Colors.white),
+                    borderSide: const BorderSide(color: Colors.black),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(30.0),
-                    borderSide: const BorderSide(color: Colors.white),
+                    borderSide: const BorderSide(color: Colors.black),
                   ),
-                  suffixIcon: Icon(Icons.location_on, color: Colors.white),
+                  suffixIcon: Icon(Icons.location_on, color: Colors.cyan),
                 ),
                 items: tunisiaStates.map<DropdownMenuItem<String>>((String value) {
                   return DropdownMenuItem<String>(
@@ -227,17 +228,17 @@ class _FilePageState extends State<FilePage> {
               SizedBox(height: 16.0),
               DropdownButtonFormField<Gender>(
                 value: selectedGender,
-                style: TextStyle(color: Colors.white), // Text color for the input field
+                style: TextStyle(color: Colors.black), // Text color for the input field
                 decoration: InputDecoration(
                   labelText: 'Genre',
-                  labelStyle: const TextStyle(color: Colors.white),
+                  labelStyle: const TextStyle(color: Colors.black),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(30.0),
-                    borderSide: const BorderSide(color: Colors.white),
+                    borderSide: const BorderSide(color: Colors.black),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(30.0),
-                    borderSide: const BorderSide(color: Colors.white),
+                    borderSide: const BorderSide(color: Colors.black),
                   ),
                 ),
                 items: Gender.values.map<DropdownMenuItem<Gender>>((Gender value) {
@@ -268,7 +269,7 @@ class _FilePageState extends State<FilePage> {
               CheckboxListTile(
                 title: const Text(
                   'Avez-vous des maladies chroniques ?',
-                  style: TextStyle(color: Colors.white),
+                  style: TextStyle(color: Colors.black),
                 ),
                 value: hasChromaticDisease,
                 onChanged: (bool? value) {
@@ -276,21 +277,22 @@ class _FilePageState extends State<FilePage> {
                     hasChromaticDisease = value!;
                   });
                 },
+                activeColor: Colors.cyan, // Change checkbox color to cyan
               ),
               if (hasChromaticDisease)
                 TextFormField(
                   controller: diseasesController,
-                  style: const TextStyle(color: Colors.white),
+                  style: const TextStyle(color: Colors.black),
                   decoration: InputDecoration(
                     labelText: 'Maladies chroniques',
-                    labelStyle: const TextStyle(color: Colors.white),
+                    labelStyle: const TextStyle(color: Colors.black),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(30.0),
-                      borderSide: const BorderSide(color: Colors.white),
+                      borderSide: const BorderSide(color: Colors.black),
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(30.0),
-                      borderSide: const BorderSide(color: Colors.white),
+                      borderSide: const BorderSide(color: Colors.black),
                     ),
                   ),
                 ),
@@ -298,7 +300,7 @@ class _FilePageState extends State<FilePage> {
               CheckboxListTile(
                 title: const Text(
                   'Prenez-vous des médicaments ?',
-                  style: TextStyle(color: Colors.white),
+                  style: TextStyle(color: Colors.black),
                 ),
                 value: isTakingMedicine,
                 onChanged: (bool? value) {
@@ -306,21 +308,22 @@ class _FilePageState extends State<FilePage> {
                     isTakingMedicine = value!;
                   });
                 },
+                activeColor: Colors.cyan, // Change checkbox color to cyan
               ),
               if (isTakingMedicine)
                 TextFormField(
                   controller: medicinesController,
-                  style: const TextStyle(color: Colors.white),
+                  style: const TextStyle(color: Colors.black),
                   decoration: InputDecoration(
                     labelText: 'Médicaments',
-                    labelStyle: const TextStyle(color: Colors.white),
+                    labelStyle: const TextStyle(color: Colors.black),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(30.0),
-                      borderSide: const BorderSide(color: Colors.white),
+                      borderSide: const BorderSide(color: Colors.black),
                     ),
                     focusedBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(30.0),
-                      borderSide: const BorderSide(color: Colors.white),
+                      borderSide: const BorderSide(color: Colors.black),
                     ),
                   ),
                 ),
@@ -333,7 +336,7 @@ class _FilePageState extends State<FilePage> {
                     _submitForm();
                   },
                   style: ElevatedButton.styleFrom(
-                    primary: Colors.blue,
+                    primary: Colors.teal[300],
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(30),
                     ),

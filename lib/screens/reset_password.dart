@@ -1,3 +1,5 @@
+// ignore_for_file: sort_child_properties_last
+
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -70,14 +72,18 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Mot de passe oubliée'),
+        title: const Text(
+          'Mot de passe oubliée',
+          style: TextStyle(
+            color: Colors.cyan, // Change text color to cyan
+          ),
+        ),
+        backgroundColor: Colors.white,
+        iconTheme: IconThemeData(color: Colors.cyan), // Change back arrow color to cyan
       ),
       body: Container(
-        decoration: const BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage("assets/images/appBackground.png"),
-            fit: BoxFit.cover,
-          ),
+        decoration: BoxDecoration(
+        color: Colors.teal[300], // Set your desired color here
         ),
         padding: const EdgeInsets.all(16.0),
         child: Form(
@@ -86,50 +92,45 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               TextFormField(
-                controller: emailController,
-                validator: (value) {
-                  if (value!.isEmpty || !value.contains('@')) {
-                    return 'Veuillez entrer un e-mail valide';
-                  }
-                  return null;
-                },
-                keyboardType: TextInputType.emailAddress,
-                style: const TextStyle(color: Colors.white),
-                decoration: InputDecoration(
-                  labelText: 'E-mail',
-                  hintText: 'Entrez votre e-mail',
-                  labelStyle: const TextStyle(color: Colors.white),
-                  hintStyle: const TextStyle(color: Colors.white70),
-                  focusedBorder: OutlineInputBorder(
-                    borderSide: const BorderSide(color: Colors.white),
-                    borderRadius: const BorderRadius.all(Radius.circular(30.0)),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderSide: const BorderSide(color: Colors.white),
-                    borderRadius: const BorderRadius.all(Radius.circular(30.0)),
+                  controller: emailController,
+                  style: const TextStyle(color: Colors.black),
+                  validator: (value) {
+                    if (value!.isEmpty || !value.contains('@')) {
+                      return 'Veuillez entrer un e-mail valide';
+                    }
+                    return null;
+                  },
+                  keyboardType: TextInputType.emailAddress,
+                  decoration: InputDecoration(
+                    labelStyle: const TextStyle(color: Colors.black),
+                    filled: true,
+                    fillColor: Colors.white, // Background color of the input field
+                    border: OutlineInputBorder(
+                      borderSide: const BorderSide(color: Colors.black),
+                      borderRadius: BorderRadius.all(Radius.circular(30)),
+                    ),
+                    hintText: 'Entrez votre e-mail',
                   ),
                 ),
-              ),
               const SizedBox(height: 20),
               ElevatedButton(
-  onPressed: _sendPasswordResetEmail,
-  child: const Padding(
-    padding: EdgeInsets.all(16.0),
-    child: Text(
-      'Envoyer',
-      style: TextStyle(
-        color: Colors.white,
-        fontSize: 18,
-        fontWeight: FontWeight.normal,
-      ),
-    ),
-  ),
-  style: ElevatedButton.styleFrom(
-    primary: Colors.blue,
-    shape: const StadiumBorder(),
-  ),
-),
-
+            onPressed: _sendPasswordResetEmail,
+            child: const Padding(
+              padding: EdgeInsets.all(16.0),
+              child: Text(
+                'Envoyer',
+                style: TextStyle(
+                  color: Colors.cyan,
+                  fontSize: 18,
+                  fontWeight: FontWeight.normal,
+                ),
+              ),
+            ),
+            style: ElevatedButton.styleFrom(
+              primary: Colors.white,
+              shape: const StadiumBorder(),
+            ),
+          ),
             ],
           ),
         ),

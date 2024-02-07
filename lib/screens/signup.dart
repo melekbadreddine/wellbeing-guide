@@ -102,15 +102,18 @@ class _SignUpPageState extends State<SignUpPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title:
-            const Text("Créer un compte"), // Change 'Sign Up' to 'S'inscrire'
+        title: const Text(
+          'Créer un compte',
+          style: TextStyle(
+            color: Colors.cyan, // Change text color to cyan
+          ),
+        ),
+        backgroundColor: Colors.white,
+        iconTheme: IconThemeData(color: Colors.cyan), // Change back arrow color to cyan
       ),
       body: Container(
-        decoration: const BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage("assets/images/appBackground.png"),
-            fit: BoxFit.cover,
-          ),
+        decoration: BoxDecoration(
+        color: Colors.teal[300], // Set your desired color here
         ),
         padding: const EdgeInsets.all(16.0),
         child: Center(
@@ -124,14 +127,15 @@ class _SignUpPageState extends State<SignUpPage> {
                     controller: emailController,
                     keyboardType: TextInputType.emailAddress,
                     decoration: InputDecoration(
-                      labelText: 'E-mail', // Change 'Email' to 'E-mail'
                       hintText: 'Entrez votre adresse mail',
+                      labelStyle: const TextStyle(color: Colors.black),
+                    filled: true,
+                    fillColor: Colors.white, // Background color of the input field
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(30.0),
                       ),
-                      labelStyle: const TextStyle(color: Colors.white),
                     ),
-                    style: const TextStyle(color: Colors.white),
+                    style: const TextStyle(color: Colors.black),
                     validator: (value) {
                       if (value!.isEmpty || !value.contains('@')) {
                         return 'Veuillez entrer un e-mail valide'; // Change 'Please enter a valid email' to 'Veuillez entrer un e-mail valide'
@@ -144,7 +148,7 @@ class _SignUpPageState extends State<SignUpPage> {
                 SizedBox(
                   child: TextFormField(
                     controller: passwordController,
-                    style: const TextStyle(color: Colors.white),
+                    style: const TextStyle(color: Colors.black),
                     onChanged: (value) {
                       setState(() {
                         isPasswordNotEmpty = value.isNotEmpty;
@@ -158,12 +162,13 @@ class _SignUpPageState extends State<SignUpPage> {
                     },
                     obscureText: _obscureText,
                     decoration: InputDecoration(
-                      labelStyle: const TextStyle(color: Colors.white),
+                      labelStyle: const TextStyle(color: Colors.black),
+                    filled: true,
+                    fillColor: Colors.white, // Background color of the input field
                       border: OutlineInputBorder(
                         borderSide: BorderSide(color: Colors.white),
                         borderRadius: BorderRadius.all(Radius.circular(30)),
                       ),
-                      labelText: 'Mot de passe',
                       hintText: 'Entrez votre mot de passe',
                       suffixIcon: isPasswordNotEmpty
                           ? IconButton(
@@ -171,7 +176,7 @@ class _SignUpPageState extends State<SignUpPage> {
                                 _obscureText
                                     ? Icons.visibility
                                     : Icons.visibility_off,
-                                color: Colors.white,
+                                color: Colors.cyan,
                               ),
                               onPressed: () {
                                 setState(() {
@@ -190,19 +195,20 @@ class _SignUpPageState extends State<SignUpPage> {
                     obscureText:
                         _obscureTextConfirm, // New boolean for confirming password visibility
                     decoration: InputDecoration(
-                      labelText: 'Confirmez le mot de passe',
+                      labelStyle: const TextStyle(color: Colors.black),
+                    filled: true,
+                    fillColor: Colors.white, // Background color of the input field
                       hintText: 'Confirmez votre mot de passe',
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(30.0),
                       ),
-                      labelStyle: const TextStyle(color: Colors.white),
                       suffixIcon: isConfirmPasswordNotEmpty
                           ? IconButton(
                               icon: Icon(
                                 _obscureTextConfirm
                                     ? Icons.visibility
                                     : Icons.visibility_off,
-                                color: Colors.white,
+                                color: Colors.cyan,
                               ),
                               onPressed: () {
                                 setState(() {
@@ -212,7 +218,7 @@ class _SignUpPageState extends State<SignUpPage> {
                             )
                           : null,
                     ),
-                    style: const TextStyle(color: Colors.white),
+                    style: const TextStyle(color: Colors.black),
                     validator: (value) {
                       if (value != passwordController.text) {
                         return 'Les mots de passe ne correspondent pas';
@@ -231,7 +237,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   onPressed: _registerAndSendVerificationEmail,
                   style: ElevatedButton.styleFrom(
                     shape: const StadiumBorder(),
-                    primary: Colors.blue,
+                    primary: Colors.white,
                     minimumSize: const Size(120, 40),
                   ),
                   child: Padding(
@@ -239,7 +245,7 @@ class _SignUpPageState extends State<SignUpPage> {
                     child: Text(
                       'S\'inscrire',
                       style: TextStyle(
-                        color: Colors.white,
+                        color: Colors.cyan,
                         fontSize: 18,
                         fontWeight: FontWeight.normal,
                       ),

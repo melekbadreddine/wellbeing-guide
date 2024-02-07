@@ -44,69 +44,52 @@ class _MyFormState extends State<MyForm> {
         child: SingleChildScrollView(
           physics: AlwaysScrollableScrollPhysics(),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Text(
                 'الرجاء الإجابة على الأسئلة التالية استنادًا إلى كيف كنت تشعر في الأسبوع الماضي.',
                 style: TextStyle(fontSize: 16),
+                textAlign: TextAlign.right,
               ),
               const SizedBox(height: 20),
-              buildDropdown(
-                  'هل شعرت بتوتر أو إجهاد خلال الأسبوع الماضي؟', 'anxiety',
+              buildDropdown('هل شعرت بتوتر أو إجهاد خلال الأسبوع الماضي؟', 'anxiety',
                   examples: ['ضغوط العمل', 'القلق بشأن الأحداث القادمة']),
               const SizedBox(height: 20),
-              buildDropdown(
-                  'هل شعرت ببطء في التصرفات أو الحركات؟', 'depression',
+              buildDropdown('هل شعرت ببطء في التصرفات أو الحركات؟', 'depression',
                   examples: ['الشعور بالإرهاق', 'التفكير البطيء']),
               const SizedBox(height: 20),
-              buildDropdown(
-                  'هل شعرت بقلق أو هموم خلال الأسبوع الماضي؟', 'worry_anxiety',
+              buildDropdown('هل شعرت بقلق أو هموم خلال الأسبوع الماضي؟', 'worry_anxiety',
                   examples: ['القلق بشأن الصحة', 'القلق بشأن المستقبل']),
               const SizedBox(height: 20),
-              buildDropdown('هل شعرت بقلق زائد أو هلع خلال الأسبوع الماضي؟',
-                  'panic_anxiety',
+              buildDropdown('هل شعرت بقلق زائد أو هلع خلال الأسبوع الماضي؟', 'panic_anxiety',
                   examples: ['الهلع الشديد', 'الشعور بفقدان السيطرة']),
               const SizedBox(height: 20),
-              buildDropdown(
-                  'هل شعرت برغبة في البكاء خلال الأسبوع الماضي؟', 'cry',
-                  examples: [
-                    'الشعور بالضعف العاطفي',
-                    'الرغبة في التخلص من الضغوط'
-                  ]),
+              buildDropdown('هل شعرت برغبة في البكاء خلال الأسبوع الماضي؟', 'cry',
+                  examples: ['الشعور بالضعف العاطفي', 'الرغبة في التخلص من الضغوط']),
               const SizedBox(height: 20),
-              buildDropdown(
-                  'هل شعرت بتوتر عصبي خلال الأسبوع الماضي؟', 'nervous_tension',
+              buildDropdown('هل شعرت بتوتر عصبي خلال الأسبوع الماضي؟', 'nervous_tension',
                   examples: ['التوتر الشديد', 'الشعور بالتجاعيد العصبية']),
               const SizedBox(height: 20),
-              buildDropdown(
-                  'هل شعرت بالهم والتوتر خلال الأسبوع الماضي؟', 'panic',
+              buildDropdown('هل شعرت بالهم والتوتر خلال الأسبوع الماضي؟', 'panic',
                   examples: ['الشعور بالتوتر العصبي', 'الهم والقلق']),
               const SizedBox(height: 20),
-              buildDropdown(
-                  'هل شعرت بالكآبة خلال الأسبوع الماضي؟', 'mood_depressed',
+              buildDropdown('هل شعرت بالكآبة خلال الأسبوع الماضي؟', 'mood_depressed',
                   examples: ['الشعور بالحزن', 'التشاؤم بشكل عام']),
               const SizedBox(height: 20),
-              buildDropdown('هل شعرت بالإرهاق البدني خلال الأسبوع الماضي؟',
-                  'physical_fatigue',
+              buildDropdown('هل شعرت بالإرهاق البدني خلال الأسبوع الماضي؟', 'physical_fatigue',
                   examples: ['الإرهاق العضلي', 'الشعور بالتعب الشديد']),
               const SizedBox(height: 20),
-              buildDropdown('هل شعرت بالإرهاق النفسي خلال الأسبوع الماضي؟',
-                  'mental_fatigue',
+              buildDropdown('هل شعرت بالإرهاق النفسي خلال الأسبوع الماضي؟', 'mental_fatigue',
                   examples: ['التعب العقلي', 'صعوبة التركيز']),
               const SizedBox(height: 20),
-              buildDropdown(
-                  'هل شعرت بصعوبة في الاستمتاع بالأشياء خلال الأسبوع الماضي؟',
+              buildDropdown('هل شعرت بصعوبة في الاستمتاع بالأشياء خلال الأسبوع الماضي؟',
                   'enjoyment_difficulty',
-                  examples: [
-                    'فقدان الاهتمام بالهوايات',
-                    'عدم القدرة على الاستمتاع بالأنشطة'
-                  ]),
+                  examples: ['فقدان الاهتمام بالهوايات', 'عدم القدرة على الاستمتاع بالأنشطة']),
               const SizedBox(height: 20),
-              buildDropdown(
-                  'هل شعرت بالتوجس خلال الأسبوع الماضي؟', 'apprehension',
+              buildDropdown('هل شعرت بالتوجس خلال الأسبوع الماضي؟', 'apprehension',
                   examples: ['الشعور بالتوتر المستمر', 'القلق بشكل مفرط']),
               const SizedBox(height: 20),
-              buildDropdown(
-                  'هل شعرت بالهلع خلال الأسبوع الماضي؟', 'panic_attack',
+              buildDropdown('هل شعرت بالهلع خلال الأسبوع الماضي؟', 'panic_attack',
                   examples: ['الهلع الشديد', 'الشعور بالخوف الشديد']),
               const SizedBox(height: 20),
               ElevatedButton(
@@ -118,40 +101,9 @@ class _MyFormState extends State<MyForm> {
                   setState(() {});
                   await saveFormDataToFirestore();
                 },
-                child: const Text('إرسال'),
+                child: const Text('التالي'),
               ),
               const SizedBox(height: 20),
-              Text(
-                'تفسير النتائج:',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 10),
-              Text(
-                'نقاط التوتر: $anxietyScore',
-                style: const TextStyle(fontSize: 16),
-              ),
-              Text(
-                'نقاط الاكتئاب: $depressionScore',
-                style: const TextStyle(fontSize: 16),
-              ),
-              const SizedBox(height: 10),
-              Text(
-                'تفسير نقاط التوتر:',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-              Text(
-                getInterpretation(anxietyScore),
-                style: const TextStyle(fontSize: 16),
-              ),
-              const SizedBox(height: 10),
-              Text(
-                'تفسير نقاط الاكتئاب:',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-              Text(
-                getInterpretation(depressionScore),
-                style: const TextStyle(fontSize: 16),
-              ),
             ],
           ),
         ),
@@ -162,15 +114,16 @@ class _MyFormState extends State<MyForm> {
   Widget buildDropdown(String question, String fieldName,
       {List<String> examples = const []}) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.end,
       children: [
-        Text(question),
+        Text(question, textAlign: TextAlign.right),
         if (examples.isNotEmpty)
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 8.0),
             child: Text(
               'أمثلة: ${examples.join(", ")}',
               style: TextStyle(color: Colors.grey),
+              textAlign: TextAlign.right,
             ),
           ),
         DropdownButton<String>(
@@ -204,7 +157,7 @@ class _MyFormState extends State<MyForm> {
     );
   }
 
-  void calculateScores() {
+  Future<void> calculateScores() async {
     int anxiety = 0;
     int depression = 0;
 
@@ -229,6 +182,63 @@ class _MyFormState extends State<MyForm> {
 
     anxietyScore = anxiety;
     depressionScore = depression;
+
+    if (anxietyScore >= 11 || depressionScore >= 11) {
+      // Show additional question about suicidal thoughts
+      await showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('هل لديك أفكار انتحارية؟'),
+            content: Column(
+              children: [
+                RadioListTile(
+                  title: Text('نعم'),
+                  value: 'نعم',
+                  groupValue: formData['suicidalThoughts'],
+                  onChanged: (String? value) {
+                    setState(() {
+                      formData['suicidalThoughts'] = value;
+                    });
+                  },
+                ),
+                RadioListTile(
+                  title: Text('لا'),
+                  value: 'لا',
+                  groupValue: formData['suicidalThoughts'],
+                  onChanged: (String? value) {
+                    setState(() {
+                      formData['suicidalThoughts'] = value;
+                    });
+                  },
+                ),
+              ],
+            ),
+            actions: [
+              ElevatedButton(
+                onPressed: () async {
+                  await saveAdditionalFormData();
+                  Navigator.of(context).pop();
+                },
+                child: Text('حفظ'),
+              ),
+            ],
+          );
+        },
+      );
+
+      // Navigate to the home page
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => HomePage()),
+      );
+    } else {
+      // Navigate to the home page directly
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => HomePage()),
+      );
+    }
   }
 
   int getScore(String? value) {
@@ -254,7 +264,8 @@ class _MyFormState extends State<MyForm> {
       return 'مستوى عالٍ من الاضطراب';
     }
   }
-      Future<void> saveFormDataToFirestore() async {
+
+  Future<void> saveFormDataToFirestore() async {
     try {
       User? currentUser = FirebaseAuth.instance.currentUser;
 
@@ -275,21 +286,19 @@ class _MyFormState extends State<MyForm> {
 
           DocumentReference userDoc = userCollection.doc(currentUser.uid);
 
-          await userDoc.set({
-            'userId': currentUser.uid,
-            'userName': userName,
-            'familyName': familyName,
-            'anxietyInterpretation': getInterpretation(anxietyScore),
-            'depressionInterpretation': getInterpretation(depressionScore),
-            'timestamp': FieldValue.serverTimestamp(),
-          }, SetOptions(merge: true));
+          await userDoc.set(
+            {
+              'userId': currentUser.uid,
+              'userName': userName,
+              'familyName': familyName,
+              'anxietyInterpretation': getInterpretation(anxietyScore),
+              'depressionInterpretation': getInterpretation(depressionScore),
+              'timestamp': FieldValue.serverTimestamp(),
+            },
+            SetOptions(merge: true),
+          );
 
           print('Interpretation data saved to Firestore for user: ${currentUser.uid}');
-          // Navigate to the HomePage
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => HomePage()),
-          );
         } else {
           print('Error: User information not found for user ID: ${currentUser.uid}');
         }
@@ -298,6 +307,33 @@ class _MyFormState extends State<MyForm> {
       }
     } catch (e) {
       print('Error saving interpretation data to Firestore: $e');
+    }
+  }
+
+  Future<void> saveAdditionalFormData() async {
+    try {
+      User? currentUser = FirebaseAuth.instance.currentUser;
+
+      if (currentUser != null) {
+        // Save additional form data to Firestore
+        CollectionReference userCollection =
+            FirebaseFirestore.instance.collection('user_form');
+
+        DocumentReference userDoc = userCollection.doc(currentUser.uid);
+
+        await userDoc.set(
+          {
+            'suicidalThoughts': formData['suicidalThoughts'],
+          },
+          SetOptions(merge: true),
+        );
+
+        print('Additional form data saved to Firestore for user: ${currentUser.uid}');
+      } else {
+        print('Error: Current user is null');
+      }
+    } catch (e) {
+      print('Error saving additional form data to Firestore: $e');
     }
   }
 }

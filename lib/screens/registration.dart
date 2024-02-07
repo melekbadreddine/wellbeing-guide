@@ -5,7 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:CareCompanion/screens/onboarding_screen.dart';
+import 'package:CareCompanion/services/authentication.dart';
 import 'file.dart'; // Import the file.dart containing FilePage
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -248,7 +248,7 @@ class _RegisterPageState extends State<RegisterPage> {
       body: Container(
         decoration: BoxDecoration(
         color: Colors.teal[300], // Set your desired color here
-  ),
+        ),
         padding: const EdgeInsets.all(16.0),
         child: Padding(
           padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
