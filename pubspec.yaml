@@ -48,6 +48,7 @@ dependencies:
   flutter_screenutil: ^5.9.0
   page_transition: ^2.1.0
   bottom_navy_bar: ^6.0.0
+  table_calendar: ^3.0.9
 
 dev_dependencies:
   mockito: ^5.0.15

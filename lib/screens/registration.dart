@@ -340,7 +340,8 @@ class _RegisterPageState extends State<RegisterPage> {
                               rememberMe = value ?? false;
                             });
                           },
-                          checkColor: Colors.white,
+                          checkColor: Colors.black,
+                          activeColor: Colors.cyan,
                         ),
                         Text(
                           'Souvenir de moi',

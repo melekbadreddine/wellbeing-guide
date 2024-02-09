@@ -1,3 +1,4 @@
+import 'package:CareCompanion/screens/appointment.dart';
 import 'package:CareCompanion/screens/home_page.dart';
 import 'package:CareCompanion/screens/settings.dart';
 import 'package:flutter/material.dart';
@@ -19,20 +20,23 @@ class CustomBottomNavigationBar extends StatelessWidget {
       iconSize: 24,
       currentIndex: currentIndex,
       onTap: (int index) {
-        // Redirect to HomePage() when clicking on the home icon
-      if (index == 0) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => HomePage()),
-        );
-      }
-      else if (index == 3) {
-          // Navigate to the "More" page when the "More" icon is tapped
-          Navigator.push(context, MaterialPageRoute(builder: (context) {
-            return SettingsScreen();
-          }));
+        if (index == 0) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => HomePage()),
+          );
+        } else if (index == 1) {
+          // Navigate to the calendar page when the calendar icon is tapped
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => Calendar()), // Assuming Calendar is the name of your calendar page
+          );
+        } else if (index == 3) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => SettingsScreen()),
+          );
         } else {
-          // Handle navigation for other icons
           onTap(index);
         }
       },
