@@ -20,49 +20,52 @@ class SettingsTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Container(
-          width: 50,
-          height: 50,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(15),
-            color: color,
-          ),
-          child: Icon(
-            icon,
-            color: Colors.white,
-            size: iconSize,
-          ),
-        ),
-        const SizedBox(width: 10),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+    return InkWell( // Wrap the entire row with InkWell
+      onTap: onTap,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 10),
+        child: Row(
           children: [
-            Text(
-              title,
-              style: TextStyle(
-                fontSize: titleFontSize,
-                fontWeight: FontWeight.bold,
+            Container(
+              width: 50,
+              height: 50,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(15),
+                color: color,
+              ),
+              child: Icon(
+                icon,
+                color: Colors.white,
+                size: iconSize,
               ),
             ),
-            // Add subtitle or additional information here if needed
+            const SizedBox(width: 10),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: TextStyle(
+                    fontSize: titleFontSize,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                // Add subtitle or additional information here if needed
+              ],
+            ),
+            const Spacer(),
+            Container(
+              width: 50,
+              height: 50,
+              decoration: BoxDecoration(
+                color: Colors.grey.shade200,
+                borderRadius: BorderRadius.circular(15),
+              ),
+              child: const Icon(Icons.chevron_right),
+            )
           ],
         ),
-        const Spacer(),
-        InkWell(
-          onTap: onTap,
-          child: Container(
-            width: 50,
-            height: 50,
-            decoration: BoxDecoration(
-              color: Colors.grey.shade200,
-              borderRadius: BorderRadius.circular(15),
-            ),
-child: const Icon(Icons.chevron_right),
-          ),
-        )
-      ],
+      ),
     );
   }
 }
