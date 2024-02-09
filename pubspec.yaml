@@ -49,6 +49,8 @@ dependencies:
   page_transition: ^2.1.0
   bottom_navy_bar: ^6.0.0
   table_calendar: ^3.0.9
+  hexcolor: ^3.0.1
+  dialog_flowtter: ^0.3.3
 
 dev_dependencies:
   mockito: ^5.0.15

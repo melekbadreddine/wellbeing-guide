@@ -258,7 +258,7 @@ class _HomePageState extends State<HomePage> {
   onTap: () {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => ChatScreen()),
+      MaterialPageRoute(builder: (context) => Chatbot()),
     );
   },
   child: Container(

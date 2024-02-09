@@ -1,159 +1,230 @@
+import 'package:CareCompanion/screens/home_page.dart';
+import 'package:dialog_flowtter/dialog_flowtter.dart';
 import 'package:flutter/material.dart';
+import 'package:hexcolor/hexcolor.dart';
 
-class ChatScreen extends StatelessWidget {
-  const ChatScreen({Key? key}) : super(key: key);
+void main() {
+  runApp(Chatbot());
+}
+
+class Chatbot extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'Flutter Bot',
+      home: Home(),
+    );
+  }
+}
+
+class Home extends StatefulWidget {
+  @override
+  _HomeState createState() => _HomeState();
+}
+
+class _HomeState extends State<Home> {
+  late DialogFlowtter dialogFlowtter;
+  final TextEditingController messageController = TextEditingController();
+
+  List<Map<String, dynamic>> messages = [];
+
+  @override
+  void initState() {
+    super.initState();
+    DialogFlowtter.fromFile().then((instance) => dialogFlowtter = instance);
+  }
 
   @override
   Widget build(BuildContext context) {
+    var themeValue = MediaQuery.of(context).platformBrightness;
     return Scaffold(
+      backgroundColor: themeValue == Brightness.dark
+          ? HexColor('#262626')
+          : HexColor('#FFFFFF'),
       appBar: AppBar(
-        title: const Text('Chatbot'),
-      ),
-      backgroundColor: Color(0xff1B202D),
-      body: Padding(
-        padding: EdgeInsets.only(left: 14.0,right: 14),
-        child: SafeArea(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(height: 30,),
-              const Center(
-                child: Text('1 FEB 12:00',style: TextStyle(
-                  color: Colors.white70
-                ),),
+  title: const Text(
+    'Chatbot',
+    style: TextStyle(
+      color: Colors.white, // Change text color to cyan
+    ),
+  ),
+  backgroundColor: Colors.teal[300],
+  iconTheme: IconThemeData(color: Colors.white), // Change back arrow color to cyan
+  leading: IconButton(
+    icon: Icon(Icons.arrow_back),
+    onPressed: () {
+      Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => HomePage()),
+          );
+      // Navigate back to the HomePage()
+    },
+  ),
+),
+
+
+      body: SafeArea(
+        child: Column(
+          children: [
+            Expanded(child: Body(messages: messages)),
+            Container(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 10,
+                vertical: 5,
               ),
-              SizedBox(height: 8,),
-              Row(
+              child: Row(
                 children: [
-                  SizedBox(width: 10),
-                  CircleAvatar(
-                    radius: 20,
-                    backgroundImage: AssetImage('assets/images/chatbot.png'), // Sender avatar
+                  Expanded(
+                    child: TextFormField(
+                      controller: messageController,
+                      style: TextStyle(
+                          color: themeValue == Brightness.dark
+                              ? Colors.white
+                              : Colors.black,
+                          fontFamily: 'Poppins'),
+                      decoration: new InputDecoration(
+                        enabledBorder: new OutlineInputBorder(
+                            borderSide: new BorderSide(
+                                color: themeValue == Brightness.dark
+                                    ? Colors.white
+                                    : Colors.black),
+                            borderRadius: BorderRadius.circular(15)),
+                        hintStyle: TextStyle(
+                          color: themeValue == Brightness.dark
+                              ? Colors.white54
+                              : Colors.black54,
+                          fontSize: 15,
+                          fontStyle: FontStyle.italic,
+                        ),
+                        labelStyle: TextStyle(
+                            color: themeValue == Brightness.dark
+                                ? Colors.white
+                                : Colors.black),
+                        hintText: 'Send a message',
+                      ),
+                    ),
                   ),
-                  SizedBox(width: 10),
-                  Container(
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
-                        color: Color(0xff373E4E)
-                    ),
-                    child: Padding(
-                      padding: EdgeInsets.all(10.0),
-                      child: Text('I commented on Figma, I want to add\n sjdiw weosjwy cys sow woois ijwdwd wysxta\njsd',style: TextStyle(
-                        color: Colors.white,
-                      ),),
-                    ),
+                  IconButton(
+                    color: themeValue == Brightness.dark
+                        ? Colors.white
+                        : Colors.black,
+                    icon: Icon(Icons.send),
+                    onPressed: () {
+                      sendMessage(messageController.text);
+                      messageController.clear();
+                    },
                   ),
                 ],
               ),
-              SizedBox(height: 10,),
-              Padding(
-                padding: const EdgeInsets.only(left: 70.0),
-                child: Container(
-                  decoration:BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      color: Color(0xff7A8194)
-                  ),
-                  child: const Padding(
-                    padding: EdgeInsets.all(10.0),
-                    child: Text('I commented on Figma, I want to add\n sjdiw weosjwy',style: TextStyle(
-                      color: Colors.white,
-                    ),),
-                  ),
-                ),
-              ),
-              SizedBox(height: 10,),
-              Container(
-                decoration:BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
-                    color: Color(0xff373E4E)
-                ),
-                child: const Padding(
-                  padding: EdgeInsets.all(10.0),
-                  child: Text('Next Month',style: TextStyle(
-                    color: Colors.white,
-                  ),),
-                ),
-              ),
-              SizedBox(height: 10,),
-              SizedBox(height: 10,),
-              const Center(
-                child: Text('08:12',style: TextStyle(
-                    color: Colors.white70
-                ),),
-              ),
-              SizedBox(height: 10,),
-              Padding(
-                padding: const EdgeInsets.only(left: 70.0),
-                child: Container(
-                  decoration:BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      color: Color(0xff7A8194)
-                  ),
-                  child: const Padding(
-                    padding: EdgeInsets.all(10.0),
-                    child: Text('I commented on Figma, I want to add\n sjdiw weosjwy',style: TextStyle(
-                      color: Colors.white,
-                    ),),
-                  ),
-                ),
-              ),
-              SizedBox(height: 10,),
-              Padding(
-                padding: const EdgeInsets.only(left: 300.0),
-                child: Container(
-                  decoration:BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      color: Color(0xff7A8194)
-                  ),
-                  child: const Padding(
-                    padding: EdgeInsets.all(10.0),
-                    child: Text('?',style: TextStyle(
-                      color: Colors.white,
-                    ),),
-                  ),
-                ),
-              ),
-              const Spacer(),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 8.0),
-                child: Container(
-                  height: 45,
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(30),
-                    color: Color(0xff3D4354)
-                  ),
-                  child: Row(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(4.0),
-                        child: Container(
-                          height:40,
-                          width: 40,
-
-                          decoration: BoxDecoration(
-                            color: Colors.white30,
-                            borderRadius: BorderRadius.circular(50)
-                          ),
-                          child: Icon(Icons.camera_alt_outlined),
-                        ),
-                      ),
-                      SizedBox(width: 15,),
-                      const Text('Message',style: TextStyle(
-                        color: Colors.white54
-                      ),),
-                      Spacer(),
-                      const Padding(
-                        padding: EdgeInsets.only(right: 8.0),
-                        child: Icon(Icons.send,color:  Colors.white54,),
-                      ),
-                    ],///thankyou alll of youuuuuu se you next tutorial
-                  ),
-                ),
-              )
-            ],
-          ),
+            ),
+          ],
         ),
+      ),
+    );
+  }
+
+  void sendMessage(String text) async {
+    if (text.isEmpty) return;
+    setState(() {
+      addMessage(
+        Message(text: DialogText(text: [text])),
+        true,
+      );
+    });
+
+    DetectIntentResponse response = await dialogFlowtter.detectIntent(
+      queryInput: QueryInput(text: TextInput(text: text)),
+    );
+
+    if (response.message == null) return;
+    setState(() {
+      addMessage(response.message!);
+    });
+  }
+
+  void addMessage(Message message, [bool isUserMessage = false]) {
+    messages.add({
+      'message': message,
+      'isUserMessage': isUserMessage,
+    });
+  }
+
+  @override
+  void dispose() {
+    dialogFlowtter.dispose();
+    super.dispose();
+  }
+}
+
+class Body extends StatelessWidget {
+  final List<Map<String, dynamic>> messages;
+
+  const Body({
+    Key? key,
+    this.messages = const [],
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.separated(
+      itemBuilder: (context, i) {
+        var obj = messages[messages.length - 1 - i];
+        Message message = obj['message'];
+        bool isUserMessage = obj['isUserMessage'] ?? false;
+        return Row(
+          mainAxisAlignment:
+              isUserMessage ? MainAxisAlignment.end : MainAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            _MessageContainer(
+              message: message,
+              isUserMessage: isUserMessage,
+            ),
+          ],
+        );
+      },
+      separatorBuilder: (_, i) => Container(height: 10),
+      itemCount: messages.length,
+      reverse: true,
+      padding: const EdgeInsets.symmetric(
+        horizontal: 10,
+        vertical: 20,
+      ),
+    );
+  }
+}
+
+class _MessageContainer extends StatelessWidget {
+  final Message message;
+  final bool isUserMessage;
+
+  const _MessageContainer({
+    Key? key,
+    required this.message,
+    this.isUserMessage = false,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      constraints: BoxConstraints(maxWidth: 250),
+      child: LayoutBuilder(
+        builder: (context, constrains) {
+          return Container(
+            decoration: BoxDecoration(
+              color: isUserMessage ? Colors.grey[600] : Colors.white,
+              borderRadius: BorderRadius.circular(20),
+            ),
+            padding: const EdgeInsets.all(10),
+            child: Text(
+              message.text?.text?[0] ?? '',
+              style: TextStyle(
+                color: Colors.white,
+              ),
+            ),
+          );
+        },
       ),
     );
   }
