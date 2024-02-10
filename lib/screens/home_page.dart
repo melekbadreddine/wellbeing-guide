@@ -1,3 +1,4 @@
+import 'package:CareCompanion/screens/RelaxationExerciseScreen.dart';
 import 'package:CareCompanion/screens/chatbot.dart';
 import 'package:CareCompanion/screens/more.dart';
 import 'package:CareCompanion/screens/settings.dart';
@@ -203,6 +204,7 @@ class _HomePageState extends State<HomePage> {
       ),
       backgroundColor: Colors.white,
       body: SafeArea(
+        
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Column(
@@ -318,30 +320,43 @@ class _HomePageState extends State<HomePage> {
                 height: 205,
                 child: ListView(
                   scrollDirection: Axis.horizontal,
-                  children: const [
-                    ExerciseItem(
-                      image: "assets/images/breathing.png",
-                      title: "Respiration",
-                      description: "Pratiquez des respirations lentes.",
-                    ),
-                    ExerciseItem(
-                      image: "assets/images/lotus-position.png",
-                      title: "Méditation",
-                      description: "Focalisez l'esprit, détendez-vous.",
-                    ),
-                    ExerciseItem(
-                      image: "assets/images/exercising.png",
-                      title: "Étirements",
-                      description: "Étirements doux pour la détente.",
-                    ),
-                    ExerciseItem(
-                      image: "assets/images/yoga.png",
-                      title: "Yoga",
-                      description: "Pratiquez des postures apaisantes.",
-                    ),
-                  ],
-                ),
-              ),
+                  children: [
+  ExerciseItem(
+    image: "assets/images/breathing.png",
+    title: "Respiration",
+    description: "Pratiquez des respirations lentes.",
+  ),
+  ExerciseItem(
+    image: "assets/images/lotus-position.png",
+    title: "Méditation",
+    description: "Focalisez l'esprit, détendez-vous.",
+  ),
+  ExerciseItem(
+    image: "assets/images/exercising.png",
+    title: "Étirements",
+    description: "Étirements doux pour la détente.",
+  ),
+  ExerciseItem(
+    image: "assets/images/yoga.png",
+    title: "Yoga",
+    description: "Pratiquez des postures apaisantes.",
+  ),
+GestureDetector(
+  onTap: () {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => RelaxationExerciseScreen()),
+    );
+  },
+  child: ExerciseItem(
+    image: "assets/images/breathing.png",
+    title: "Relaxation",
+    description: "Détendez-vous avec cet exercice.",
+  ),
+)
+],
+  ),
+),
               const SizedBox(height: 12),
               const SizedBox(
                 height: 30,
