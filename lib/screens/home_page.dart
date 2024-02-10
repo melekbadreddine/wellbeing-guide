@@ -204,7 +204,7 @@ class _HomePageState extends State<HomePage> {
       ),
       backgroundColor: Colors.white,
       body: SafeArea(
-        
+        child: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Column(
@@ -257,32 +257,32 @@ class _HomePageState extends State<HomePage> {
                           height: 10,
                         ),
                         GestureDetector(
-  onTap: () {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => Chatbot()),
-    );
-  },
-  child: Container(
-    width: 150,
-    height: 35,
-    padding: const EdgeInsets.all(8.0),
-    decoration: BoxDecoration(
-      color: Colors.cyan[300],
-      borderRadius: BorderRadius.circular(12.0),
-    ),
-    child: const Center(
-      child: Text(
-        "Commencer",
-        style: TextStyle(
-          color: Colors.white,
-          fontWeight: FontWeight.w400,
-          fontSize: 14,
-        ),
-      ),
-    ),
-  ),
-),
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => Chatbot()),
+                            );
+                          },
+                          child: Container(
+                            width: 150,
+                            height: 35,
+                            padding: const EdgeInsets.all(8.0),
+                            decoration: BoxDecoration(
+                              color: Colors.cyan[300],
+                              borderRadius: BorderRadius.circular(12.0),
+                            ),
+                            child: const Center(
+                              child: Text(
+                                "Commencer",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w400,
+                                  fontSize: 14,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
 
                       ],
                     ),
@@ -382,6 +382,7 @@ GestureDetector(
           ),
         ),
       ),
+      ),
       bottomNavigationBar: CustomBottomNavigationBar(
         currentIndex: _selectedIndex,
         onTap: (index) {
@@ -389,6 +390,7 @@ GestureDetector(
             _selectedIndex = index;
           });
         },
+      ),
       ),
     );
   }
