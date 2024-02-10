@@ -4,12 +4,14 @@ class ExerciseItem extends StatelessWidget {
   final String image;
   final String title;
   final String description;
+   final VoidCallback? onTap; 
 
   const ExerciseItem({
     Key? key,
     required this.image,
     required this.title,
     required this.description,
+    this.onTap,
   }) : super(key: key);
 
   @override
