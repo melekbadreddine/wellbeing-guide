@@ -37,7 +37,14 @@ class _MyFormState extends State<MyForm> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('استبيان HAD'),
+        title: const Text(
+          'استبيان HAD',
+          style: TextStyle(
+            color: Colors.white, // Change text color to cyan
+          ),
+        ),
+        backgroundColor: Colors.teal[300],
+        iconTheme: IconThemeData(color: Colors.white), // Change back arrow color to cyan
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -101,6 +108,9 @@ class _MyFormState extends State<MyForm> {
                   setState(() {});
                   await saveFormDataToFirestore();
                 },
+                style: ElevatedButton.styleFrom(
+                  primary: Colors.teal[300], // Change the color to teal[300]
+                ),
                 child: const Text('التالي'),
               ),
               const SizedBox(height: 20),
