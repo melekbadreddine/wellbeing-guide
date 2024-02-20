@@ -2,6 +2,8 @@ import 'package:CareCompanion/screens/home_page.dart';
 import 'package:dialog_flowtter/dialog_flowtter.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 void main() {
   runApp(Chatbot());
@@ -35,6 +37,62 @@ class _HomeState extends State<Home> {
     DialogFlowtter.fromFile().then((instance) => dialogFlowtter = instance);
   }
 
+  Future<void> fetchChatResponse(String userMessage) async {
+    final response = await http.post(
+      Uri.parse('http://127.0.0.1:5000/chat'), // Replace with your server URL
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({'user_input': userMessage}),
+    );
+
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> data = jsonDecode(response.body);
+      setState(() {
+        messages = List.from(data['conversation']);
+      });
+    } else {
+      throw Exception('Failed to load chat response');
+    }
+  }
+
+void sendMessage(String text) async {
+  if (text.isEmpty) return;
+
+  try {
+    setState(() {
+      addMessage(
+        Message(text: DialogText(text: [text])),
+        true,
+      );
+      messageController.clear(); // Clear the input field
+    });
+
+    var response = await http.post(
+      Uri.parse('http://10.0.2.2:5000/chat'), // Use the correct server URL
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({'user_input': text}),
+    );
+
+    print('Server response: ${response.body}');
+
+    // Parse the server response if needed
+    var jsonResponse = jsonDecode(response.body);
+
+    setState(() {
+      addMessage(Message(text: DialogText(text: [jsonResponse['ai_response']])));
+    });
+  } catch (e) {
+    print('Error in sendMessage: $e');
+  }
+}
+
+
+  void addMessage(Message message, [bool isUserMessage = false]) {
+    messages.add({
+      'message': message,
+      'isUserMessage': isUserMessage,
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     var themeValue = MediaQuery.of(context).platformBrightness;
@@ -43,27 +101,24 @@ class _HomeState extends State<Home> {
           ? HexColor('#262626')
           : HexColor('#FFFFFF'),
       appBar: AppBar(
-  title: const Text(
-    'Chatbot',
-    style: TextStyle(
-      color: Colors.white, // Change text color to cyan
-    ),
-  ),
-  backgroundColor: Colors.teal[300],
-  iconTheme: IconThemeData(color: Colors.white), // Change back arrow color to cyan
-  leading: IconButton(
-    icon: Icon(Icons.arrow_back),
-    onPressed: () {
-      Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => HomePage()),
-          );
-      // Navigate back to the HomePage()
-    },
-  ),
-),
-
-
+        title: const Text(
+          'Chatbot',
+          style: TextStyle(
+            color: Colors.white, // Change text color to cyan
+          ),
+        ),
+        backgroundColor: Colors.teal[300],
+        iconTheme: IconThemeData(color: Colors.white),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => HomePage()),
+            );
+          },
+        ),
+      ),
       body: SafeArea(
         child: Column(
           children: [
@@ -112,7 +167,6 @@ class _HomeState extends State<Home> {
                     icon: Icon(Icons.send),
                     onPressed: () {
                       sendMessage(messageController.text);
-                      messageController.clear();
                     },
                   ),
                 ],
@@ -122,32 +176,6 @@ class _HomeState extends State<Home> {
         ),
       ),
     );
-  }
-
-  void sendMessage(String text) async {
-    if (text.isEmpty) return;
-    setState(() {
-      addMessage(
-        Message(text: DialogText(text: [text])),
-        true,
-      );
-    });
-
-    DetectIntentResponse response = await dialogFlowtter.detectIntent(
-      queryInput: QueryInput(text: TextInput(text: text)),
-    );
-
-    if (response.message == null) return;
-    setState(() {
-      addMessage(response.message!);
-    });
-  }
-
-  void addMessage(Message message, [bool isUserMessage = false]) {
-    messages.add({
-      'message': message,
-      'isUserMessage': isUserMessage,
-    });
   }
 
   @override
@@ -207,20 +235,23 @@ class _MessageContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final Color? bgColor = isUserMessage ? Colors.grey[600] : Colors.grey[600];
+    final Color textColor = isUserMessage ? Colors.white : Colors.white;
+
     return Container(
       constraints: BoxConstraints(maxWidth: 250),
       child: LayoutBuilder(
-        builder: (context, constrains) {
+        builder: (context, constraints) {
           return Container(
             decoration: BoxDecoration(
-              color: isUserMessage ? Colors.grey[600] : Colors.white,
+              color: bgColor,
               borderRadius: BorderRadius.circular(20),
             ),
             padding: const EdgeInsets.all(10),
             child: Text(
               message.text?.text?[0] ?? '',
               style: TextStyle(
-                color: Colors.white,
+                color: textColor,
               ),
             ),
           );
