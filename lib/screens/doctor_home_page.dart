@@ -5,11 +5,11 @@ import 'package:CareCompanion/widgets/custom_bottom_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import '../widgets/doctor_item.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+class DoctorPage extends StatefulWidget {
+  const DoctorPage({Key? key}) : super(key: key);
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<DoctorPage> createState() => _HomePageState();
 }
 
 class MyColors {
@@ -173,7 +173,7 @@ class AppointmentCard extends StatelessWidget {
   }
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends State<DoctorPage> {
 
   String? username; // Variable to store the username
   int _selectedIndex = 0;
@@ -207,11 +207,91 @@ class _HomePageState extends State<HomePage> {
               const SizedBox(
                 height: 30,
               ),
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 16,
+                ),
+                decoration: BoxDecoration(
+                  color: Colors.cyan[100],
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Image.asset(
+                      "assets/images/chatbot.png",
+                      width: 92,
+                      height: 100,
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          "Comment vous sentez?",
+                          style: TextStyle(
+                              color: Colors.black87,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold),
+                        ),
+                        const SizedBox(
+                          height: 4,
+                        ),
+                        const SizedBox(
+                          width: 120,
+                          child: Text(
+                            "parlez avec notre chatbot maintenant",
+                            style: TextStyle(
+                              color: Colors.black87,
+                              fontSize: 12,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => Chatbot()),
+                            );
+                          },
+                          child: Container(
+                            width: 150,
+                            height: 35,
+                            padding: const EdgeInsets.all(8.0),
+                            decoration: BoxDecoration(
+                              color: Colors.cyan[300],
+                              borderRadius: BorderRadius.circular(12.0),
+                            ),
+                            child: const Center(
+                              child: Text(
+                                "Commencer",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w400,
+                                  fontSize: 14,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 20),
+              const SizedBox(
+                height: 20,
+              ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: const [
                   Text(
-                    "Prochaines consultations",
+                    "Liste des exercices",
                     style: TextStyle(
                       color: Colors.black,
                       fontWeight: FontWeight.bold,

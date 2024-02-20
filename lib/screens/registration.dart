@@ -1,3 +1,4 @@
+import 'package:CareCompanion/screens/doctor_home_page.dart';
 import 'package:CareCompanion/screens/reset_password.dart';
 import 'package:CareCompanion/screens/home_page.dart';
 import 'package:CareCompanion/screens/signup.dart';
@@ -5,7 +6,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:CareCompanion/services/authentication.dart';
 import 'file.dart'; // Import the file.dart containing FilePage
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -47,11 +47,10 @@ class _RegisterPageState extends State<RegisterPage> {
   @override
   void initState() {
     super.initState();
-      // Load rememberMe value when the page initializes
+    // Load rememberMe value when the page initializes
     loadRememberMe();
   }
 
-  
   Future<void> loadRememberMe() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
@@ -86,43 +85,17 @@ class _RegisterPageState extends State<RegisterPage> {
     super.dispose();
   }
 
-  Future<void> _registerAndSendVerificationEmail() async {
+  Future<bool> checkIfEmailExists(String email) async {
     try {
-      UserCredential userCredential =
-          await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: emailController.text,
-        password: passwordController.text,
-      );
+      QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+          .collection('doctors_list')
+          .where('email', isEqualTo: email)
+          .get();
 
-      // Send email verification
-      await userCredential.user!.sendEmailVerification();
-
-      showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Vérification de l\'e-mail'),
-          content: const Text(
-              'Veuillez vérifier votre e-mail et valider votre compte pour continuer.'),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text('OK'),
-            ),
-          ],
-        );
-      },
-    );
-    } on FirebaseAuthException catch (e) {
-      if (e.code == 'weak-password') {
-        print('The password provided is too weak.');
-      } else if (e.code == 'email-already-in-use') {
-        print('The account already exists for that email.');
-      }
+      return querySnapshot.docs.isNotEmpty;
     } catch (e) {
-      print(e);
+      print('Error checking email existence: $e');
+      return false;
     }
   }
 
@@ -131,8 +104,7 @@ class _RegisterPageState extends State<RegisterPage> {
       CollectionReference userCollection =
           FirebaseFirestore.instance.collection('user_info');
 
-      DocumentSnapshot userDoc =
-          await userCollection.doc(userId).get();
+      DocumentSnapshot userDoc = await userCollection.doc(userId).get();
 
       return userDoc.exists; // Return true if the document exists (form filled)
     } catch (e) {
@@ -142,112 +114,120 @@ class _RegisterPageState extends State<RegisterPage> {
   }
 
   Future<void> _signInAfterVerification() async {
-  try {
-    UserCredential signInCredential =
-        await FirebaseAuth.instance.signInWithEmailAndPassword(
-      email: emailController.text,
-      password: passwordController.text,
-    );
+    try {
+      UserCredential signInCredential =
+          await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: emailController.text,
+        password: passwordController.text,
+      );
 
-    if (signInCredential.user != null && signInCredential.user!.emailVerified) {
-      bool isFormFilled = await checkIfUserFilledForm(signInCredential.user!.uid);
+      if (signInCredential.user != null &&
+          signInCredential.user!.emailVerified) {
+        bool isFormFilled =
+            await checkIfUserFilledForm(signInCredential.user!.uid);
 
-      await saveRememberMe();
+        await saveRememberMe();
 
-      if (isFormFilled) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => HomePage()),
-        ).then((_) {
-          emailController.clear();
-          passwordController.clear();
-        });
+        bool emailExists = await checkIfEmailExists(emailController.text);
+        if (isFormFilled && emailExists) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => HomePage()),
+          ).then((_) {
+            emailController.clear();
+            passwordController.clear();
+          });
+        } else if (isFormFilled && !emailExists) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => DoctorPage()),
+          ).then((_) {
+            emailController.clear();
+            passwordController.clear();
+          });
+        } else {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+                builder: (context) =>
+                    FilePage()), // Replace with your form page
+          ).then((_) {
+            emailController.clear();
+            passwordController.clear();
+          });
+        }
       } else {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => FilePage()), // Replace with your form page
-        ).then((_) {
-          emailController.clear();
-          passwordController.clear();
-        });
+        // Show the email not verified dialog
+        if (!signInCredential.user!.emailVerified) {
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: const Text('Email Not Verified'),
+                content: const Text('Please verify your email to log in.'),
+                actions: <Widget>[
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: const Text('OK'),
+                  ),
+                ],
+              );
+            },
+          );
+        } else {
+          // Show an alert for incorrect email or password
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: const Text('Login Failed'),
+                content: const Text(
+                    'The email or password you entered is incorrect.'),
+                actions: <Widget>[
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: const Text('OK'),
+                  ),
+                ],
+              );
+            },
+          );
+        }
       }
-    } else {
-      // Show the email not verified dialog
-      if (!signInCredential.user!.emailVerified) {
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: const Text('Email Not Verified'),
-              content: const Text('Please verify your email to log in.'),
-              actions: <Widget>[
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: const Text('OK'),
-                ),
-              ],
-            );
-          },
-        );
-      } else {
-        // Show an alert for incorrect email or password
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: const Text('Login Failed'),
-              content: const Text('The email or password you entered is incorrect.'),
-              actions: <Widget>[
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: const Text('OK'),
-                ),
-              ],
-            );
-          },
-        );
-      }
+    } on FirebaseAuthException catch (e) {
+      // Show an alert for other FirebaseAuthException errors
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Error'),
+            content: Text('Error signing in: $e'),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
+    } catch (e) {
+      print(e);
     }
-  } on FirebaseAuthException catch (e) {
-    // Show an alert for other FirebaseAuthException errors
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Error'),
-          content: Text('Error signing in: $e'),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text('OK'),
-            ),
-          ],
-        );
-      },
-    );
-  } catch (e) {
-    print(e);
   }
-}
-
-
-
-
-
-
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
-        color: Colors.teal[300], // Set your desired color here
+          color: Colors.teal[300], // Set your desired color here
         ),
         padding: const EdgeInsets.all(16.0),
         child: Padding(
@@ -280,7 +260,8 @@ class _RegisterPageState extends State<RegisterPage> {
                   decoration: InputDecoration(
                     labelStyle: const TextStyle(color: Colors.black),
                     filled: true,
-                    fillColor: Colors.white, // Background color of the input field
+                    fillColor:
+                        Colors.white, // Background color of the input field
                     border: OutlineInputBorder(
                       borderSide: const BorderSide(color: Colors.black),
                       borderRadius: BorderRadius.all(Radius.circular(30)),
@@ -316,7 +297,9 @@ class _RegisterPageState extends State<RegisterPage> {
                     suffixIcon: isPasswordNotEmpty
                         ? IconButton(
                             icon: Icon(
-                              _obscureText ? Icons.visibility : Icons.visibility_off,
+                              _obscureText
+                                  ? Icons.visibility
+                                  : Icons.visibility_off,
                               color: Colors.black,
                             ),
                             onPressed: () {
@@ -349,12 +332,14 @@ class _RegisterPageState extends State<RegisterPage> {
                         ),
                       ],
                     ),
-                    const SizedBox(width: 10), // Ajout d'un espace entre les deux éléments
+                    const SizedBox(
+                        width: 10), // Ajout d'un espace entre les deux éléments
                     TextButton(
                       onPressed: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => ForgotPasswordScreen()),
+                          MaterialPageRoute(
+                              builder: (context) => ForgotPasswordScreen()),
                         );
                       },
                       child: const Text(
