@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:CareCompanion/screens/home_page.dart';
+import 'package:CareCompanion/patient/home_page.dart';
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});

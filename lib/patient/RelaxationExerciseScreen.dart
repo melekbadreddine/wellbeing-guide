@@ -1,6 +1,6 @@
-import 'package:CareCompanion/screens/chatbot.dart';
-import 'package:CareCompanion/screens/more.dart';
-import 'package:CareCompanion/screens/settings.dart';
+import 'package:CareCompanion/patient/chatbot.dart';
+import 'package:CareCompanion/patient/more.dart';
+import 'package:CareCompanion/patient/settings.dart';
 import 'package:CareCompanion/widgets/custom_app_bar.dart';
 import 'package:CareCompanion/widgets/custom_bottom_navigation_bar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';

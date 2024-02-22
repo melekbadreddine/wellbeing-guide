@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:CareCompanion/screens/dashboard.dart';
+import 'package:CareCompanion/patient/dashboard.dart';
 import 'package:CareCompanion/widgets/rectangle_button.dart';
 import '../utils/utils.dart';
 

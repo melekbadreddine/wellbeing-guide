@@ -1,6 +1,6 @@
-import 'package:CareCompanion/screens/appointment.dart';
-import 'package:CareCompanion/screens/home_page.dart';
-import 'package:CareCompanion/screens/settings.dart';
+import 'package:CareCompanion/patient/appointment.dart';
+import 'package:CareCompanion/patient/home_page.dart';
+import 'package:CareCompanion/patient/settings.dart';
 import 'package:flutter/material.dart';
 
 class CustomBottomNavigationBar extends StatelessWidget {

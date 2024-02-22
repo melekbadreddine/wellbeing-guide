@@ -1,12 +1,12 @@
-import 'package:CareCompanion/doctor/doctor_home_page.dart';
-import 'package:CareCompanion/screens/reset_password.dart';
-import 'package:CareCompanion/screens/home_page.dart';
-import 'package:CareCompanion/screens/signup.dart';
+import 'package:CareCompanion/doctor/doctor_screen.dart';
+import 'package:CareCompanion/authentication/reset_password.dart';
+import 'package:CareCompanion/patient/home_page.dart';
+import 'package:CareCompanion/authentication/signup.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'file.dart'; // Import the file.dart containing FilePage
+import '../patient/file.dart'; // Import the file.dart containing FilePage
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
@@ -140,7 +140,7 @@ class _RegisterPageState extends State<RegisterPage> {
         } else if (isFormFilled && !emailExists) {
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => DoctorPage()),
+            MaterialPageRoute(builder: (context) => HomePage()),
           ).then((_) {
             emailController.clear();
             passwordController.clear();

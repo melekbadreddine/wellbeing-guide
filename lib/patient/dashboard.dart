@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:CareCompanion/screens/songboard.dart';
+import 'package:CareCompanion/patient/songboard.dart';
 import '../widgets/meditation_card.dart';
 import '../utils/utils.dart';
 import '../utils/assets.dart';

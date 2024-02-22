@@ -1,4 +1,4 @@
-import 'package:CareCompanion/screens/registration.dart';
+import 'package:CareCompanion/authentication/registration.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 

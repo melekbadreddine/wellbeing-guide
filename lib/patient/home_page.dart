@@ -1,5 +1,6 @@
-import 'package:CareCompanion/screens/RelaxationExerciseScreen.dart';
-import 'package:CareCompanion/screens/chatbot.dart';
+import 'package:CareCompanion/patient/RelaxationExerciseScreen.dart';
+import 'package:CareCompanion/patient/chatbot.dart';
+import 'package:CareCompanion/patient/dashboard.dart';
 import 'package:CareCompanion/widgets/custom_app_bar.dart';
 import 'package:CareCompanion/widgets/custom_bottom_navigation_bar.dart';
 import 'package:flutter/material.dart';
@@ -207,26 +208,114 @@ class _HomePageState extends State<HomePage> {
               const SizedBox(
                 height: 30,
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: const [
-                  Text(
-                    "Prochaines consultations",
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 16,
+                ),
+                decoration: BoxDecoration(
+                  color: Colors.cyan[100],
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Image.asset(
+                      "assets/images/chatbot.png",
+                      width: 92,
+                      height: 100,
                     ),
-                  ),
-                  Text(
-                    "Voir tous",
-                    style: TextStyle(
-                      color: Colors.black45,
-                      fontSize: 16,
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          "Comment vous sentez?",
+                          style: TextStyle(
+                              color: Colors.black87,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold),
+                        ),
+                        const SizedBox(
+                          height: 4,
+                        ),
+                        const SizedBox(
+                          width: 120,
+                          child: Text(
+                            "parlez avec notre chatbot maintenant",
+                            style: TextStyle(
+                              color: Colors.black87,
+                              fontSize: 12,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => Chatbot()),
+                            );
+                          },
+                          child: Container(
+                            width: 150,
+                            height: 35,
+                            padding: const EdgeInsets.all(8.0),
+                            decoration: BoxDecoration(
+                              color: Colors.cyan[300],
+                              borderRadius: BorderRadius.circular(12.0),
+                            ),
+                            child: const Center(
+                              child: Text(
+                                "Commencer",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w400,
+                                  fontSize: 14,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+
+                      ],
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
+              const SizedBox(height: 20),
+              const SizedBox(
+                height: 20,
+              ),
+              Row(
+  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  children: [
+    Text(
+      "Liste des exercices",
+      style: TextStyle(
+        color: Colors.black,
+        fontWeight: FontWeight.bold,
+        fontSize: 16,
+      ),
+    ),
+    IconButton(
+      onPressed: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => Dashboard(),
+          ),
+        );
+      },
+      icon: Icon(
+        Icons.arrow_forward,
+        color: Colors.black45,
+      ),
+    ),
+  ],
+),
+
               const SizedBox(
                 height: 20,
               ),

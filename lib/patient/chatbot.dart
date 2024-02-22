@@ -1,4 +1,4 @@
-import 'package:CareCompanion/screens/home_page.dart';
+import 'package:CareCompanion/patient/home_page.dart';
 import 'package:dialog_flowtter/dialog_flowtter.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
