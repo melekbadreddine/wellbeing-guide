@@ -51,6 +51,7 @@ dependencies:
   table_calendar: ^3.0.9
   hexcolor: ^3.0.1
   dialog_flowtter: ^0.3.3
+  audioplayers: ^5.2.1
 
 dev_dependencies:
   mockito: ^5.0.15
