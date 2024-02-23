@@ -1,0 +1,36 @@
+pipeline {
+    agent any
+    
+    stages {
+        stage('Build Android') {
+            steps {
+                sh 'flutter build apk' 
+            }
+        }
+        stage('Build iOS') {
+            steps {
+                sh 'flutter build ios' 
+            }
+        }
+        stage('Test') {
+            steps {
+                sh 'flutter test'
+            }
+        }
+        stage('Build Flutter App') {
+            steps {
+                sh 'docker build -f flutter_mobile_app.Dockerfile -t your-registry/flutter-mobile-app:latest .'
+            }
+        }
+        stage('Build Chatbot Server') {
+            steps {
+                sh 'docker build -t your-registry/flask-chatbot-server:latest ./chatbot'
+            }
+        }
+        stage('Deploy') {
+            steps {
+                sh 'kubectl apply -f deployment.yaml'
+            }
+        }
+    }
+}

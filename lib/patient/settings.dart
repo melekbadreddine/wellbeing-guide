@@ -1,4 +1,4 @@
-import 'package:CareCompanion/authentication/registration.dart';
+import 'package:CareCompanion/authentication/login.dart';
 import 'package:CareCompanion/widgets/custom_app_bar.dart';
 import 'package:CareCompanion/widgets/custom_bottom_navigation_bar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
