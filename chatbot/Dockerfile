@@ -1,5 +1,5 @@
 # Use Python base image
-FROM python:3.9-slim AS flask_builder
+FROM python:3.13.0a3-slim AS flask_builder
 
 # Set working directory
 WORKDIR /app
