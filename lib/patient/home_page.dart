@@ -1,3 +1,7 @@
+import 'package:CareCompanion/exercises/breathing.dart';
+import 'package:CareCompanion/exercises/meditation.dart';
+import 'package:CareCompanion/exercises/relaxation.dart';
+import 'package:CareCompanion/exercises/yoga.dart';
 import 'package:CareCompanion/patient/RelaxationExerciseScreen.dart';
 import 'package:CareCompanion/patient/chatbot.dart';
 import 'package:CareCompanion/patient/dashboard.dart';
@@ -289,33 +293,32 @@ class _HomePageState extends State<HomePage> {
                 height: 20,
               ),
               Row(
-  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  children: [
-    Text(
-      "Liste des exercices",
-      style: TextStyle(
-        color: Colors.black,
-        fontWeight: FontWeight.bold,
-        fontSize: 16,
-      ),
-    ),
-    IconButton(
-      onPressed: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => Dashboard(),
-          ),
-        );
-      },
-      icon: Icon(
-        Icons.arrow_forward,
-        color: Colors.black45,
-      ),
-    ),
-  ],
-),
-
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "Liste des exercices",
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    ),
+                  ),
+                  IconButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => Dashboard(),
+                        ),
+                      );
+                    },
+                    icon: Icon(
+                      Icons.arrow_forward,
+                      color: Colors.black45,
+                    ),
+                  ),
+                ],
+              ),
               const SizedBox(
                 height: 20,
               ),
@@ -324,42 +327,74 @@ class _HomePageState extends State<HomePage> {
                 child: ListView(
                   scrollDirection: Axis.horizontal,
                   children: [
-  ExerciseItem(
-    image: "assets/images/breathing.png",
-    title: "Respiration",
-    description: "Pratiquez des respirations lentes.",
-  ),
-  ExerciseItem(
-    image: "assets/images/lotus-position.png",
-    title: "Méditation",
-    description: "Focalisez l'esprit, détendez-vous.",
-  ),
-  ExerciseItem(
-    image: "assets/images/exercising.png",
-    title: "Étirements",
-    description: "Étirements doux pour la détente.",
-  ),
-  ExerciseItem(
-    image: "assets/images/yoga.png",
-    title: "Yoga",
-    description: "Pratiquez des postures apaisantes.",
-  ),
-GestureDetector(
-  onTap: () {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => RelaxationExerciseScreen()),
-    );
-  },
-  child: ExerciseItem(
-    image: "assets/images/breathing.png",
-    title: "Relaxation",
-    description: "Détendez-vous avec cet exercice.",
-  ),
-)
-],
-  ),
-),
+                    GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => BreathingExercisePage()),
+                      );
+                    },
+                    child: ExerciseItem(
+                      image: "assets/images/breathing.png",
+                      title: "Respiration",
+                      description: "Sophrologie et angoisse",
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => MeditationExercisePage()),
+                      );
+                    },
+                    child: ExerciseItem(
+                      image: "assets/images/lotus-position.png",
+                      title: "Méditation",
+                      description: "Focalisez l'esprit, détendez-vous.",
+                    ),
+                  ),
+                    GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => VideoRelaxationPage()),
+                      );
+                    },
+                    child: ExerciseItem(
+                      image: "assets/images/relaxing.png",
+                      title: "Relaxation",
+                      description: "Calme intérieur",
+                    ),
+                  ),
+                    GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => YogaPage()),
+                      );
+                    },
+                    child: ExerciseItem(
+                      image: "assets/images/yoga.png",
+                      title: "Yoga",
+                      description: "Pratiquez des postures apaisantes.",
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => RelaxationExerciseScreen()),
+                      );
+                    },
+                    child: ExerciseItem(
+                      image: "assets/images/jacobson.png",
+                      title: "Jacobson",
+                      description: "Détendez-vous avec cet exercice.",
+                    ),
+                  )
+                  ],
+                    ),
+                  ),
               const SizedBox(height: 12),
               const SizedBox(
                 height: 30,

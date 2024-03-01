@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 
 class MeditationCard extends StatelessWidget {
   const MeditationCard({
-    super.key,
+    Key? key,
     required this.title,
     required this.description,
     required this.image,
     this.onPressed,
-  });
+  }) : super(key: key);
 
   final String title;
   final String description;
@@ -21,7 +21,7 @@ class MeditationCard extends StatelessWidget {
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(25),
-          color: Colors.white,
+          color: Colors.cyan[100], // Change background color to cyan[300]
         ),
         child: Column(
           children: [

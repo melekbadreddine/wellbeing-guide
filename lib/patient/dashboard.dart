@@ -1,3 +1,5 @@
+import 'package:CareCompanion/patient/home_page.dart';
+import 'package:CareCompanion/widgets/custom_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:CareCompanion/patient/songboard.dart';
 import '../widgets/meditation_card.dart';
@@ -10,35 +12,30 @@ class Dashboard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text(
+          'Tableau de bord des exercices',
+          style: TextStyle(
+            color: Colors.white, // Change text color to cyan
+          ),
+        ),
+        backgroundColor: Colors.teal[300],
+        iconTheme: IconThemeData(color: Colors.white),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => HomePage()),
+            );
+          },
+        ),
+      ),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(15.0),
           child: Column(
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  GestureDetector(
-                    child: const Icon(
-                      Icons.arrow_back,
-                      size: 30,
-                      color: Colors.deepPurple,
-                    ),
-                    onTap: () => Navigator.pop(context),
-                  ),
-                  const Text(
-                    "Hey Sweetie!",
-                    style: kLargeTextStyle,
-                  ),
-                ],
-              ),
-              const Padding(
-                padding: EdgeInsets.only(top: 30, bottom: 30),
-                child: Text(
-                  "What's your mood today?",
-                  style: kMeduimTextStyle,
-                ),
-              ),
               Expanded(
                 child: GridView.count(
                   crossAxisCount: 2,

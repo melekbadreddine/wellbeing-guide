@@ -52,6 +52,7 @@ dependencies:
   hexcolor: ^3.0.1
   dialog_flowtter: ^0.3.3
   audioplayers: ^5.2.1
+  flutter_widget_from_html: ^0.14.11
 
 dev_dependencies:
   mockito: ^5.0.15
