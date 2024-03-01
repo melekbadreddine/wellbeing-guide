@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:CareCompanion/patient/search_page.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final Future<String?> Function() fetchUsername;
@@ -13,6 +14,13 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.onSearchPressed,
     this.onNotificationPressed,
   }) : super(key: key);
+
+  void _onSearchPressed(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => SearchPage()),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +40,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       ),
       actions: [
         IconButton(
-          onPressed: onSearchPressed,
+          onPressed: () => _onSearchPressed(context), // Pass the context here
           icon: const Icon(
             Icons.search,
             color: Colors.black54,
@@ -88,14 +96,14 @@ Future<String?> fetchUsername() async {
               .doc(currentUser.uid)
               .get();
       if (userInfoDoc.exists) {
-      // Check if the document exists
-      var username = userInfoDoc['name'] ?? '';
-      var familyName = userInfoDoc['family_name'] ?? '';
+        // Check if the document exists
+        var username = userInfoDoc['name'] ?? '';
+        var familyName = userInfoDoc['family_name'] ?? '';
 
-      if (username.isNotEmpty && familyName.isNotEmpty) {
-        return '$username $familyName';
+        if (username.isNotEmpty && familyName.isNotEmpty) {
+          return '$username $familyName';
+        }
       }
-    }
     }
 
     return 'Loading...';
