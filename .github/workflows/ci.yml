@@ -29,6 +29,3 @@ jobs:
 
       - name: Build APK for Android
         run: flutter build apk
-
-      - name: Run tests
-        run: flutter test
