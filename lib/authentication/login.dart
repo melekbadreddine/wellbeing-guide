@@ -1,4 +1,3 @@
-import 'package:CareCompanion/doctor/doctor_screen.dart';
 import 'package:CareCompanion/authentication/reset_password.dart';
 import 'package:CareCompanion/patient/home_page.dart';
 import 'package:CareCompanion/authentication/signup.dart';
