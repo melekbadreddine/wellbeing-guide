@@ -5,12 +5,14 @@ import 'package:CareCompanion/patient/search_page.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final Future<String?> Function() fetchUsername;
+  final Future<String?> Function() fetchGender;
   final Function()? onSearchPressed;
   final Function()? onNotificationPressed;
 
   const CustomAppBar({
     Key? key,
     required this.fetchUsername,
+    required this.fetchGender,
     this.onSearchPressed,
     this.onNotificationPressed,
   }) : super(key: key);
@@ -24,60 +26,67 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AppBar(
-      backgroundColor: Colors.white,
-      elevation: 0,
-      leading: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: CircleAvatar(
-          radius: 20,
-          backgroundColor: Colors.grey,
-          child: CircleAvatar(
-            radius: 18,
-            backgroundImage: AssetImage("assets/images/pm.png"),
-          ),
-        ),
-      ),
-      actions: [
-        IconButton(
-          onPressed: () => _onSearchPressed(context), // Pass the context here
-          icon: const Icon(
-            Icons.search,
-            color: Colors.black54,
-          ),
-        ),
-        IconButton(
-          onPressed: onNotificationPressed,
-          icon: const Icon(
-            Icons.notifications_none_outlined,
-            color: Colors.black54,
-          ),
-        ),
-      ],
-      title: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              FutureBuilder<String?>(
-                future: fetchUsername(),
-                builder: (context, snapshot) {
-                  return Text(
-                    snapshot.data ?? 'Loading...',
-                    style: const TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20,
-                    ),
-                  );
-                },
+    return FutureBuilder<String?>(
+      future: fetchGender(),
+      builder: (context, genderSnapshot) {
+        return AppBar(
+          backgroundColor: Colors.white,
+          elevation: 0,
+          leading: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: CircleAvatar(
+              radius: 20,
+              backgroundColor: Colors.grey,
+              child: CircleAvatar(
+                radius: 18,
+                backgroundImage: AssetImage(genderSnapshot.data == 'male'
+                    ? "assets/images/anonymous1.png"
+                    : "assets/images/anonymous2.png"),
               ),
+            ),
+          ),
+          actions: [
+            IconButton(
+              onPressed: () => _onSearchPressed(context),
+              icon: const Icon(
+                Icons.search,
+                color: Colors.black54,
+              ),
+            ),
+            IconButton(
+              onPressed: onNotificationPressed,
+              icon: const Icon(
+                Icons.notifications_none_outlined,
+                color: Colors.black54,
+              ),
+            ),
+          ],
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  FutureBuilder<String?>(
+                    future: fetchUsername(),
+                    builder: (context, usernameSnapshot) {
+                      return Text(
+                        usernameSnapshot.data ?? 'Loading...',
+                        style: const TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20,
+                        ),
+                      );
+                    },
+                  ),
+                ],
+              ),
+              // Add other widgets if needed in the Row
             ],
           ),
-          // Add other widgets if needed in the Row
-        ],
-      ),
+        );
+      },
     );
   }
 
@@ -109,6 +118,33 @@ Future<String?> fetchUsername() async {
     return 'Loading...';
   } catch (e) {
     print('Error fetching username: $e');
+    return 'Error';
+  }
+}
+
+Future<String?> fetchGender() async {
+  try {
+    User? currentUser = FirebaseAuth.instance.currentUser;
+
+    if (currentUser != null) {
+      DocumentSnapshot<Map<String, dynamic>> userInfoDoc =
+          await FirebaseFirestore.instance
+              .collection('user_info')
+              .doc(currentUser.uid)
+              .get();
+      if (userInfoDoc.exists) {
+        // Check if the document exists
+        var gender = userInfoDoc['gender'] ?? '';
+
+        if (gender.isNotEmpty) {
+          return gender;
+        }
+      }
+    }
+
+    return 'Loading...';
+  } catch (e) {
+    print('Error fetching gender: $e');
     return 'Error';
   }
 }

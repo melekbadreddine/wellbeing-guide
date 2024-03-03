@@ -35,6 +35,7 @@ class _RelaxationExerciseScreenState extends State<RelaxationExerciseScreen> {
         onNotificationPressed: () {
           // Handle notification icon tap
         },
+        fetchGender: fetchGender,
       ),
       backgroundColor: Colors.white,
       body: SafeArea(

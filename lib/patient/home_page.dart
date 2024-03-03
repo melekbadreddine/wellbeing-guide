@@ -5,8 +5,11 @@ import 'package:CareCompanion/exercises/yoga.dart';
 import 'package:CareCompanion/patient/RelaxationExerciseScreen.dart';
 import 'package:CareCompanion/patient/chatbot.dart';
 import 'package:CareCompanion/patient/dashboard.dart';
+import 'package:CareCompanion/patient/search_page.dart';
 import 'package:CareCompanion/widgets/custom_app_bar.dart';
 import 'package:CareCompanion/widgets/custom_bottom_navigation_bar.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import '../widgets/doctor_item.dart';
 
@@ -178,6 +181,29 @@ class AppointmentCard extends StatelessWidget {
   }
 }
 
+Future<bool> fetchDoctor() async {
+  try {
+    User? currentUser = FirebaseAuth.instance.currentUser;
+
+    if (currentUser != null) {
+      // Check if the user is a doctor
+      QuerySnapshot<Map<String, dynamic>> doctorSnapshot =
+          await FirebaseFirestore.instance
+              .collection('doctors')
+              .where('user_id', isEqualTo: currentUser.uid)
+              .get();
+
+      return doctorSnapshot.docs.isNotEmpty;
+    }
+
+    return false; // Return false if user is not found
+  } catch (e) {
+    print('Error fetching doctor status: $e');
+    return false;
+  }
+}
+
+
 class _HomePageState extends State<HomePage> {
 
   String? username; // Variable to store the username
@@ -199,7 +225,8 @@ class _HomePageState extends State<HomePage> {
         },
         onNotificationPressed: () {
           // Handle notification icon tap
-        },
+        }, 
+        fetchGender: fetchGender,
       ),
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -391,6 +418,19 @@ class _HomePageState extends State<HomePage> {
                       title: "Jacobson",
                       description: "Détendez-vous avec cet exercice.",
                     ),
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => RelaxationExerciseScreen()),
+                      );
+                    },
+                    child: ExerciseItem(
+                      image: "assets/images/colonnes_beck.png",
+                      title: "Colonnes de Beck",
+                      description: "Gérer vos émotions & pensées",
+                    ),
                   )
                   ],
                     ),
@@ -401,21 +441,148 @@ class _HomePageState extends State<HomePage> {
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: const [
-                  Text(
-                    "Rendez-vous",
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                    ),
+                children: [
+                  FutureBuilder<bool>(
+                    future: fetchDoctor(),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return Text(
+                          "Loading...",
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                          ),
+                        );
+                      } else if (snapshot.hasError) {
+                        return Text(
+                          "Error loading data",
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                          ),
+                        );
+                      } else if (snapshot.data == true) {
+                        return Text(
+                          "Rendez-vous",
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                          ),
+                        );
+                      } else {
+                        return Text(
+                          "Trouvez un docteur",
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                          ),
+                        );
+                      }
+                    },
                   ),
                 ],
               ),
-              const SizedBox(
+              SizedBox(
                 height: 20,
               ),
-              AppointmentCard(onTap: () {  },)
+              FutureBuilder<bool>(
+                future: fetchDoctor(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return CircularProgressIndicator();
+                  } else if (snapshot.hasError) {
+                    return Text("Error loading data");
+                  } else if (snapshot.data == true) {
+                    return AppointmentCard(
+                      onTap: () {
+                        // Implement onTap logic
+                      },
+                    );
+                  } else {
+                    return Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 16,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.cyan[100],
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Image.asset(
+                            "assets/images/doctor.png",
+                            width: 92,
+                            height: 100,
+                          ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "Ajoutez un docteur!",
+                                style: TextStyle(
+                                  color: Colors.black87,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              SizedBox(
+                                height: 4,
+                              ),
+                              SizedBox(
+                                width: 120,
+                                child: Text(
+                                  "parlez avec un docteur maintenant",
+                                  style: TextStyle(
+                                    color: Colors.black87,
+                                    fontSize: 12,
+                                  ),
+                                ),
+                              ),
+                              SizedBox(
+                                height: 10,
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(builder: (context) => SearchPage()),
+                                  );
+                                },
+                                child: Container(
+                                  width: 150,
+                                  height: 35,
+                                  padding: const EdgeInsets.all(8.0),
+                                  decoration: BoxDecoration(
+                                    color: Colors.cyan[300],
+                                    borderRadius: BorderRadius.circular(12.0),
+                                  ),
+                                  child: Center(
+                                    child: Text(
+                                      "Chercher",
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w400,
+                                        fontSize: 14,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    );
+                  }
+                },
+              ),
+
             ],
           ),
         ),

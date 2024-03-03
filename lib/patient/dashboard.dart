@@ -1,10 +1,11 @@
+import 'package:CareCompanion/exercises/breathing.dart';
+import 'package:CareCompanion/exercises/meditation.dart';
+import 'package:CareCompanion/exercises/relaxation.dart';
+import 'package:CareCompanion/exercises/yoga.dart';
+import 'package:CareCompanion/patient/RelaxationExerciseScreen.dart';
 import 'package:CareCompanion/patient/home_page.dart';
-import 'package:CareCompanion/widgets/custom_app_bar.dart';
+import 'package:CareCompanion/widgets/doctor_item.dart';
 import 'package:flutter/material.dart';
-import 'package:CareCompanion/patient/songboard.dart';
-import '../widgets/meditation_card.dart';
-import '../utils/utils.dart';
-import '../utils/assets.dart';
 
 class Dashboard extends StatelessWidget {
   const Dashboard({super.key});
@@ -41,109 +42,86 @@ class Dashboard extends StatelessWidget {
                   crossAxisCount: 2,
                   mainAxisSpacing: 20,
                   crossAxisSpacing: 30,
+                  childAspectRatio: 0.9, 
                   children: [
-                    MeditationCard(
-                      title: kMeditateTitle,
-                      description: kMeditateSubtitle,
-                      image: kMeditateImageSource,
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const SongBoard(
-                              musicName: kMeditateTitle,
-                              imageSource: kMeditateImageSource,
-                              musicSource: kMeditateMusicSource,
-                            ),
-                          ),
-                        );
-                      },
+                    GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => BreathingExercisePage()),
+                      );
+                    },
+                    child: ExerciseItem(
+                      image: "assets/images/breathing.png",
+                      title: "Respiration",
+                      description: "Sophrologie et angoisse",
                     ),
-                    MeditationCard(
-                      title: kRelaxTitle,
-                      description: kRelaxSubtitle,
-                      image: kRelaxImageSource,
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const SongBoard(
-                              musicName: kRelaxTitle,
-                              imageSource: kRelaxImageSource,
-                              musicSource: kRelaxMusicSource,
-                            ),
-                          ),
-                        );
-                      },
+                  ),
+                    GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => MeditationExercisePage()),
+                      );
+                    },
+                    child: ExerciseItem(
+                      image: "assets/images/lotus-position.png",
+                      title: "Méditation",
+                      description: "Focalisez l'esprit, détendez-vous.",
                     ),
-                    MeditationCard(
-                      title: kBrainTitle,
-                      description: kBrainSubtitle,
-                      image: kBrainImageSource,
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const SongBoard(
-                              musicName: kBrainTitle,
-                              imageSource: kBrainImageSource,
-                              musicSource: kBrainMusicSource,
-                            ),
-                          ),
-                        );
-                      },
+                  ),
+                    GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => VideoRelaxationPage()),
+                      );
+                    },
+                    child: ExerciseItem(
+                      image: "assets/images/relaxing.png",
+                      title: "Relaxation",
+                      description: "Calme intérieur",
                     ),
-                    MeditationCard(
-                      title: kStudyTitle,
-                      description: kStudySubtitle,
-                      image: kStudyImageSource,
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const SongBoard(
-                              musicName: kStudyTitle,
-                              imageSource: kStudyImageSource,
-                              musicSource: kStudyMusicSource,
-                            ),
-                          ),
-                        );
-                      },
+                  ),
+                    GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => YogaPage()),
+                      );
+                    },
+                    child: ExerciseItem(
+                      image: "assets/images/yoga.png",
+                      title: "Yoga",
+                      description: "Pratiquez des postures apaisantes.",
                     ),
-                    MeditationCard(
-                      title: kSleepTitle,
-                      description: kSleepSubtitle,
-                      image: kSleepImageSource,
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const SongBoard(
-                              musicName: kSleepTitle,
-                              imageSource: kSleepImageSource,
-                              musicSource: kSleepMusicSource,
-                            ),
-                          ),
-                        );
-                      },
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => RelaxationExerciseScreen()),
+                      );
+                    },
+                    child: ExerciseItem(
+                      image: "assets/images/jacobson.png",
+                      title: "Jacobson",
+                      description: "Détendez-vous avec cet exercice.",
                     ),
-                    MeditationCard(
-                      title: kFocusTitle,
-                      description: kFocusSubtitle,
-                      image: kFocusImageSource,
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const SongBoard(
-                              musicName: kFocusTitle,
-                              imageSource: kFocusImageSource,
-                              musicSource: kFocusMusicSource,
-                            ),
-                          ),
-                        );
-                      },
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => RelaxationExerciseScreen()),
+                      );
+                    },
+                    child: ExerciseItem(
+                      image: "assets/images/colonnes_beck.png",
+                      title: "Colonnes de Beck",
+                      description: "Gérer vos émotions & pensées",
                     ),
+                  )
                   ],
                 ),
               )
