@@ -25,8 +25,6 @@ class _SearchPageState extends State<SearchPage> {
 
     // Apply the search query if available
     if (query.isNotEmpty) {
-      print('Search Query: $query');
-
       // Use 'orderBy' for case-insensitive search on the 'name' field
       return doctorsCollection.orderBy('name').snapshots();
     }
@@ -79,11 +77,30 @@ class _SearchPageState extends State<SearchPage> {
               var name = doctor['name']?.toString() ?? 'No Name';
 
               return Card(
-                elevation: 3, // Adjust the elevation for the shadow effect
-                margin: EdgeInsets.all(8), // Add margin for spacing
+                elevation: 5,
+                margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15),
+                ),
                 child: ListTile(
-                  title: Text(name),
-                  // Add more details or actions if needed
+                  contentPadding: EdgeInsets.all(16),
+                  leading: CircleAvatar(
+                    backgroundImage: AssetImage('../../assets/images/doctor_1.jpg'),
+                    radius: 30,
+                  ),
+                  title: Text(
+                    name,
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18,
+                    ),
+                  ),
+                  subtitle: Text(
+                    'Specialty: ${doctor['specialty'] ?? 'No Specialty'}',
+                    style: TextStyle(
+                      fontStyle: FontStyle.italic,
+                    ),
+                  ),
                 ),
               );
             },
