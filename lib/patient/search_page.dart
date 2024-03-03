@@ -40,7 +40,10 @@ class _SearchPageState extends State<SearchPage> {
         title: TextField(
           controller: _searchController,
           decoration: InputDecoration(
-            hintText: 'Search doctors...',
+            hintText: 'Chercher un docteur...',
+            hintStyle: TextStyle(
+            color: Colors.white, // Change text color to cyan
+          ),
           ),
           onChanged: (query) {
             setState(() {
@@ -48,6 +51,8 @@ class _SearchPageState extends State<SearchPage> {
             });
           },
         ),
+        backgroundColor: Colors.teal[300],
+        iconTheme: IconThemeData(color: Colors.white),
       ),
       body: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
         stream: _searchResults,
