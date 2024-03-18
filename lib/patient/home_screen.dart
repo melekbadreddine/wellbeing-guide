@@ -1,26 +1,24 @@
 import 'package:flutter/material.dart';
-import 'package:CareCompanion/widgets/custom_app_bar.dart';
-import 'package:CareCompanion/widgets/custom_bottom_navigation_bar.dart';
 
-class HomeScreen extends StatefulWidget {
-  @override
-  _HomeScreenState createState() => _HomeScreenState();
-}
-
-class _HomeScreenState extends State<HomeScreen> {
-  int _selectedIndex = 0;
-
+class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(
-        fetchUsername: fetchUsername,
-        onSearchPressed: () {
-          // Handle search icon tap
-        },
-        onNotificationPressed: () {
-          // Handle notification icon tap
-        },
+      appBar: AppBar(
+        title: Row(
+          children: [
+            CircleAvatar(
+              backgroundImage: AssetImage('assets/images/profile.jpg'),
+            ),
+            SizedBox(width: 8.0),
+            Text('Welcome back, Jessica'),
+            Spacer(),
+            IconButton(
+              icon: Icon(Icons.menu),
+              onPressed: () {},
+            ),
+          ],
+        ),
       ),
       body: ListView(
         children: [
@@ -66,6 +64,11 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
                 SizedBox(width: 8.0),
+                Expanded(
+                  child: CircleAvatar(
+                    backgroundImage: AssetImage('assets/images/patient2.jpg'),
+                  ),
+                ),
               ],
             ),
           ),
@@ -111,14 +114,6 @@ class _HomeScreenState extends State<HomeScreen> {
             ],
           ),
         ],
-      ),
-      bottomNavigationBar: CustomBottomNavigationBar(
-        currentIndex: _selectedIndex,
-        onTap: (index) {
-          setState(() {
-            _selectedIndex = index;
-          });
-        },
       ),
     );
   }

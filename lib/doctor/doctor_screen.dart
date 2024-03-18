@@ -32,7 +32,6 @@ class _HomePageState extends State<DoctorInterface> {
         onNotificationPressed: () {
           // Handle notification icon tap
         }, 
-        fetchGender: fetchGender,
       ),
       bottomNavigationBar: CustomBottomNavigationBar(
         currentIndex: _selectedIndex,

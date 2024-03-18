@@ -41,7 +41,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
         onNotificationPressed: () {
           // Handle notification icon tap
         },
-        fetchGender: fetchGender,
       ),
       body: SafeArea(
         child: Center(

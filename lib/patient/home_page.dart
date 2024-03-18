@@ -5,6 +5,7 @@ import 'package:CareCompanion/exercises/yoga.dart';
 import 'package:CareCompanion/patient/RelaxationExerciseScreen.dart';
 import 'package:CareCompanion/patient/chatbot.dart';
 import 'package:CareCompanion/patient/dashboard.dart';
+import 'package:CareCompanion/patient/home_screen.dart';
 import 'package:CareCompanion/patient/search_page.dart';
 import 'package:CareCompanion/widgets/custom_app_bar.dart';
 import 'package:CareCompanion/widgets/custom_bottom_navigation_bar.dart';
@@ -226,7 +227,6 @@ class _HomePageState extends State<HomePage> {
         onNotificationPressed: () {
           // Handle notification icon tap
         }, 
-        fetchGender: fetchGender,
       ),
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -548,7 +548,7 @@ class _HomePageState extends State<HomePage> {
                                 onTap: () {
                                   Navigator.push(
                                     context,
-                                    MaterialPageRoute(builder: (context) => SearchPage()),
+                                    MaterialPageRoute(builder: (context) => HomeScreen()),
                                   );
                                 },
                                 child: Container(

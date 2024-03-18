@@ -57,6 +57,8 @@ dependencies:
     sdk: flutter
   flutter_gherkin: ^2.0.0
   bdd_widget_test: ^1.6.4
+  image_picker: ^1.0.7
+  firebase_storage: ^11.6.0
 
 dev_dependencies:
   mockito: ^5.0.15

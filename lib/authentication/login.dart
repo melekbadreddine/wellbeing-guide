@@ -1,4 +1,5 @@
 import 'package:CareCompanion/authentication/reset_password.dart';
+import 'package:CareCompanion/doctor/doctor_home.dart';
 import 'package:CareCompanion/patient/home_page.dart';
 import 'package:CareCompanion/authentication/signup.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -131,7 +132,7 @@ class _RegisterPageState extends State<RegisterPage> {
         if (isFormFilled && emailExists) {
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => HomePage()),
+            MaterialPageRoute(builder: (context) => HomeScreen()),
           ).then((_) {
             emailController.clear();
             passwordController.clear();

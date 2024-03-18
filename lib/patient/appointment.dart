@@ -52,7 +52,6 @@ class _CalendarState extends State<Calendar> {
         onNotificationPressed: () {
           // Handle notification icon tap
         },
-        fetchGender: fetchGender,
       ),
       body: SingleChildScrollView(
         child: Column(
