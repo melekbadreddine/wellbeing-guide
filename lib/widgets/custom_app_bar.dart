@@ -1,13 +1,14 @@
 import 'dart:io';
+import 'package:CareCompanion/patient/notifications.dart';
+import 'package:CareCompanion/patient/search_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:CareCompanion/patient/search_page.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker_platform_interface/src/types/image_source.dart' as ImageSource;
 
-class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
+class CustomAppBar extends StatefulWidget implements PreferredSizeWidget {
   final Future<String?> Function() fetchUsername;
   final Function()? onSearchPressed;
   final Function()? onNotificationPressed;
@@ -19,13 +20,16 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.onNotificationPressed,
   }) : super(key: key);
 
-  void _onSearchPressed(BuildContext context) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => SearchPage()),
-    );
+  @override
+  State<StatefulWidget> createState() {
+    return _CustomAppBarState();
   }
 
+  @override
+  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
+}
+
+class _CustomAppBarState extends State<CustomAppBar> {
   Future<File?> pickImage(ImageSource.ImageSource source) async {
     final picker = ImagePicker();
     final pickedFile = await picker.pickImage(source: source);
@@ -36,26 +40,27 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   }
 
   Future<String?> uploadImageToFirebaseStorage(
-    File imageFile, String userId) async {
-  try {
-    Reference storageRef =
-        FirebaseStorage.instance.ref().child('patient_avatar/$userId');
-    UploadTask uploadTask = storageRef.putFile(imageFile);
-    TaskSnapshot taskSnapshot = await uploadTask;
-    String downloadUrl = await taskSnapshot.ref.getDownloadURL();
+      File imageFile, String userId, String fileExtension) async {
+    try {
+      Reference storageRef = FirebaseStorage.instance
+          .ref()
+          .child('patient_avatar/$userId.$fileExtension');
+      UploadTask uploadTask = storageRef.putFile(imageFile);
+      TaskSnapshot taskSnapshot = await uploadTask;
+      String downloadUrl = await taskSnapshot.ref.getDownloadURL();
 
-    // Update the user's avatar URL in Firestore
-    await FirebaseFirestore.instance
-        .collection('user_info')
-        .doc(userId)
-        .update({'avatarUrl': downloadUrl});
+      // Update the user's avatar URL in Firestore
+      await FirebaseFirestore.instance
+          .collection('user_info')
+          .doc(userId)
+          .update({'avatarUrl': downloadUrl});
 
-    return downloadUrl;
-  } catch (e) {
-    print('Error uploading image: $e');
-    return null;
+      return downloadUrl;
+    } catch (e) {
+      print('Error uploading image: $e');
+      return null;
+    }
   }
-}
 
   Future<void> deleteOldImageFromFirebaseStorage(String userId) async {
     try {
@@ -67,6 +72,34 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     }
   }
 
+  Future<String?> fetchAvatarUrl() async {
+    try {
+      User? currentUser = FirebaseAuth.instance.currentUser;
+
+      if (currentUser != null) {
+        DocumentSnapshot<Map<String, dynamic>> userInfoDoc =
+            await FirebaseFirestore.instance
+                .collection('user_info')
+                .doc(currentUser.uid)
+                .get();
+        if (userInfoDoc.exists) {
+          String? avatarUrl = userInfoDoc['avatarUrl'] as String?;
+          if (avatarUrl != null) {
+            return avatarUrl;
+          } else {
+            // Default picture for users without avatars
+            return 'assets/images/anonymous.png';
+          }
+        }
+      }
+
+      return null;
+    } catch (e) {
+      print('Error fetching avatar URL: $e');
+      return null;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return AppBar(
@@ -74,63 +107,111 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       elevation: 0,
       leading: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: GestureDetector(
-          onTap: () async {
-            ImageSource.ImageSource source = await showDialog(
-              context: context,
-              builder: (context) => AlertDialog(
-                title: Text('Choisir une Photo de Profil'),
-                actions: [
-                  TextButton(
-                    onPressed: () =>
-                        Navigator.pop(context, ImageSource.ImageSource.camera),
-                    child: Text('Camera'),
+        child: Stack(
+          children: [
+            GestureDetector(
+              onTap: () async {
+                ImageSource.ImageSource source = await showDialog(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                    title: Text('Choisir une Photo de Profil'),
+                    actions: [
+                      TextButton(
+                        onPressed: () =>
+                            Navigator.pop(context, ImageSource.ImageSource.camera),
+                        child: Text('Camera'),
+                      ),
+                      TextButton(
+                        onPressed: () =>
+                            Navigator.pop(context, ImageSource.ImageSource.gallery),
+                        child: Text('Gallerie'),
+                      ),
+                    ],
                   ),
-                  TextButton(
-                    onPressed: () =>
-                        Navigator.pop(context, ImageSource.ImageSource.gallery),
-                    child: Text('Gallerie'),
-                  ),
-                ],
-              ),
-            );
+                );
 
-            if (source != null) {
-              File? imageFile = await pickImage(source);
-              if (imageFile != null) {
-                User? currentUser = FirebaseAuth.instance.currentUser;
-                if (currentUser != null) {
-                  String? userId = currentUser.uid;
-                  await deleteOldImageFromFirebaseStorage(userId);
-                  String? downloadUrl =
-                      await uploadImageToFirebaseStorage(imageFile, userId);
-                  if (downloadUrl != null) {
-                    // Update the user's avatar URL in Firestore
-                    await FirebaseFirestore.instance
-                        .collection('user_info')
-                        .doc(userId)
-                        .update({'avatarUrl': downloadUrl});
+                if (source != null) {
+                  File? imageFile = await pickImage(source);
+                  if (imageFile != null) {
+                    User? currentUser = FirebaseAuth.instance.currentUser;
+                    if (currentUser != null) {
+                      String? userId = currentUser.uid;
+                      await deleteOldImageFromFirebaseStorage(userId);
+                      String? downloadUrl =
+                          await uploadImageToFirebaseStorage(imageFile, userId, 'png');
+                      if (downloadUrl != null) {
+                        // Update the user's avatar URL in Firestore
+                        await FirebaseFirestore.instance
+                            .collection('user_info')
+                            .doc(userId)
+                            .update({'avatarUrl': downloadUrl});
+                      }
+                    }
                   }
                 }
-              }
-            }
-          },
-          child: CircleAvatar(
-            radius: 20,
-            backgroundColor: Colors.grey,
-          ),
+              },
+              child: FutureBuilder<String?>(
+                future: fetchAvatarUrl(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return CircleAvatar(
+                      radius: 20,
+                      backgroundColor: Colors.grey,
+                    );
+                  } else if (snapshot.hasError) {
+                    return CircleAvatar(
+                      radius: 20,
+                      backgroundColor: Colors.grey,
+                    );
+                  } else if (snapshot.data != null) {
+                    return CircleAvatar(
+                      radius: 20,
+                      backgroundImage: NetworkImage(snapshot.data!),
+                    );
+                  } else {
+                    // Default picture for users who haven't changed their avatars
+                    return CircleAvatar(
+                      radius: 20,
+                      backgroundImage: AssetImage('assets/images/anonymous.png'),
+                    );
+                  }
+                },
+              ),
+            ),
+            Positioned(
+              bottom: -1,
+              right: 0,
+              child: Icon(
+                Icons.add_a_photo,
+                color: Colors.black54,
+                size: 15, // Adjust the size as needed
+              ),
+            ),
+          ],
         ),
       ),
       actions: [
         IconButton(
-          onPressed: () => _onSearchPressed(context),
+          onPressed: () {
+            // Navigate to SearchPage
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => SearchPage()),
+            );
+          },
           icon: const Icon(
             Icons.search,
             color: Colors.black54,
           ),
         ),
         IconButton(
-          onPressed: onNotificationPressed,
+          onPressed: () {
+            // Navigate to Notifications
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => Notifications()),
+            );
+          },
           icon: const Icon(
             Icons.notifications_none_outlined,
             color: Colors.black54,
@@ -144,7 +225,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               FutureBuilder<String?>(
-                future: fetchUsername(),
+                future: widget.fetchUsername(),
                 builder: (context, usernameSnapshot) {
                   return Text(
                     usernameSnapshot.data ?? 'Loading...',
@@ -163,9 +244,6 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       ),
     );
   }
-
-  @override
-  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 }
 
 Future<String?> fetchUsername() async {
