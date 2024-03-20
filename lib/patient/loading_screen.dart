@@ -43,7 +43,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Image.asset(
-                  'assets/images/alfredHeadshot.png',
+                  'assets/images/chatbot.png',
                   width: 120.0,
                   height: 120.0,
                 ),

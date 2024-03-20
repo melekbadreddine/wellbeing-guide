@@ -36,19 +36,26 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   }
 
   Future<String?> uploadImageToFirebaseStorage(
-      File imageFile, String userId) async {
-    try {
-      Reference storageRef =
-          FirebaseStorage.instance.ref().child('patient_avatar/$userId');
-      UploadTask uploadTask = storageRef.putFile(imageFile);
-      TaskSnapshot taskSnapshot = await uploadTask;
-      String downloadUrl = await taskSnapshot.ref.getDownloadURL();
-      return downloadUrl;
-    } catch (e) {
-      print('Error uploading image: $e');
-      return null;
-    }
+    File imageFile, String userId) async {
+  try {
+    Reference storageRef =
+        FirebaseStorage.instance.ref().child('patient_avatar/$userId');
+    UploadTask uploadTask = storageRef.putFile(imageFile);
+    TaskSnapshot taskSnapshot = await uploadTask;
+    String downloadUrl = await taskSnapshot.ref.getDownloadURL();
+
+    // Update the user's avatar URL in Firestore
+    await FirebaseFirestore.instance
+        .collection('user_info')
+        .doc(userId)
+        .update({'avatarUrl': downloadUrl});
+
+    return downloadUrl;
+  } catch (e) {
+    print('Error uploading image: $e');
+    return null;
   }
+}
 
   Future<void> deleteOldImageFromFirebaseStorage(String userId) async {
     try {
@@ -72,7 +79,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             ImageSource.ImageSource source = await showDialog(
               context: context,
               builder: (context) => AlertDialog(
-                title: Text('Select Image Source'),
+                title: Text('Choisir une Photo de Profil'),
                 actions: [
                   TextButton(
                     onPressed: () =>
@@ -82,7 +89,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                   TextButton(
                     onPressed: () =>
                         Navigator.pop(context, ImageSource.ImageSource.gallery),
-                    child: Text('Gallery'),
+                    child: Text('Gallerie'),
                   ),
                 ],
               ),

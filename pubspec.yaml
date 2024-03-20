@@ -38,6 +38,7 @@ dependencies:
   go_router:
   provider:
   shared_preferences: ^2.1.0
+  firebase_app_check: ^0.1.1+9
 
   # Kommunicate chatbot SDK:
   kommunicate_flutter: ^1.5.1
