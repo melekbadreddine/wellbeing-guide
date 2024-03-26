@@ -88,7 +88,7 @@ class _RegisterPageState extends State<RegisterPage> {
   Future<bool> checkIfEmailExists(String email) async {
     try {
       QuerySnapshot querySnapshot = await FirebaseFirestore.instance
-          .collection('doctors_list')
+          .collection('doctors')
           .where('email', isEqualTo: email)
           .get();
 

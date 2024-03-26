@@ -60,6 +60,8 @@ dependencies:
   bdd_widget_test: ^1.6.4
   image_picker: ^1.0.7
   firebase_storage: ^11.6.0
+  just_audio: ^0.9.36
+  firebase_messaging: ^14.7.10
 
 dev_dependencies:
   mockito: ^5.0.15

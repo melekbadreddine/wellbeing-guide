@@ -1,19 +1,35 @@
+import 'package:CareCompanion/authentication/login.dart';
+import 'package:CareCompanion/patient/notifications.dart';
+import 'package:CareCompanion/patient/search_page.dart';
+import 'package:CareCompanion/widgets/doctor_app_bar.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:CareCompanion/widgets/custom_app_bar.dart';
-import 'package:CareCompanion/widgets/custom_bottom_navigation_bar.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
 
+Future<void> _signOut(BuildContext context) async {
+    try {
+      await FirebaseAuth.instance.signOut();
+      // After signing out, navigate to the registration page
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => RegisterPage()),
+      );
+    } catch (e) {
+      print('Error signing out: $e');
+      // Handle error if necessary
+    }
+  }
+
 class _HomeScreenState extends State<HomeScreen> {
-  int _selectedIndex = 0;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(
+      appBar: DoctorAppBar(
         fetchUsername: fetchUsername,
         onSearchPressed: () {
           // Handle search icon tap
@@ -21,6 +37,62 @@ class _HomeScreenState extends State<HomeScreen> {
         onNotificationPressed: () {
           // Handle notification icon tap
         },
+      ),
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: [
+            DrawerHeader(
+              decoration: BoxDecoration(
+                color: Colors.blue,
+              ),
+              child: Text(
+                'Settings',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 24,
+                ),
+              ),
+            ),
+            ListTile(
+              leading: Icon(Icons.person),
+              title: Text('Profil'),
+              onTap: () {
+                // Navigate to Profile page
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.search),
+              title: Text('Recherche'),
+              onTap: () {
+                // Navigate to Search page
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => SearchPage()),
+                );
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.notifications),
+              title: Text('Notifications'),
+              onTap: () {
+                // Navigate to Notifications page
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => Notifications()),
+                );
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.logout),
+              title: Text('Déconnecter'),
+              onTap: () {
+                    // Perform sign out
+                    _signOut(context);
+                  },
+            ),
+          ],
+        ),
       ),
       body: ListView(
         children: [
@@ -111,14 +183,6 @@ class _HomeScreenState extends State<HomeScreen> {
             ],
           ),
         ],
-      ),
-      bottomNavigationBar: CustomBottomNavigationBar(
-        currentIndex: _selectedIndex,
-        onTap: (index) {
-          setState(() {
-            _selectedIndex = index;
-          });
-        },
       ),
     );
   }
