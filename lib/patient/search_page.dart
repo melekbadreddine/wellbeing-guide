@@ -26,19 +26,49 @@ class _SearchPageState extends State<SearchPage> {
     CollectionReference<Map<String, dynamic>> doctorsCollection =
         FirebaseFirestore.instance.collection('doctors');
 
-    if (query.isNotEmpty) {
-      return doctorsCollection.orderBy('name').snapshots();
-    }
+    // Construct the query to fetch documents with 'name' and 'state' fields
+    Query<Map<String, dynamic>> querySnapshot = doctorsCollection
+        .where('name', isGreaterThanOrEqualTo: query.toLowerCase())
+        .where('name', isLessThanOrEqualTo: query.toLowerCase() + '\uf8ff');
 
-    return doctorsCollection.snapshots();
+    return querySnapshot.snapshots();
+  }
+
+  Future<String?> fetchAvatarUrl() async {
+    try {
+      User? currentUser = FirebaseAuth.instance.currentUser;
+
+      if (currentUser != null) {
+        DocumentSnapshot<Map<String, dynamic>> userInfoDoc =
+            await FirebaseFirestore.instance
+                .collection('doctors')
+                .doc(currentUser.uid)
+                .get();
+        if (userInfoDoc.exists) {
+          String? avatarUrl = userInfoDoc['avatarUrl'] as String?;
+          if (avatarUrl != null) {
+            return avatarUrl;
+          } else {
+            // Default picture for users without avatars
+            return 'assets/images/anonymous.png';
+          }
+        }
+      }
+
+      return null;
+    } catch (e) {
+      print('Error fetching avatar URL: $e');
+      return null;
+    }
   }
 
   Future<void> _requestDoctor(String doctorId) async {
     try {
       User? currentUser = FirebaseAuth.instance.currentUser;
       if (currentUser != null) {
-        DocumentReference userInfoRef =
-            FirebaseFirestore.instance.collection('user_info').doc(currentUser.uid);
+        DocumentReference userInfoRef = FirebaseFirestore.instance
+            .collection('user_info')
+            .doc(currentUser.uid);
         DocumentReference doctorRef =
             FirebaseFirestore.instance.collection('doctors').doc(doctorId);
 
@@ -84,7 +114,10 @@ class _SearchPageState extends State<SearchPage> {
   Future<String?> _fetchUserAvatarUrl(String userId) async {
     try {
       DocumentSnapshot<Map<String, dynamic>> userInfoDoc =
-          await FirebaseFirestore.instance.collection('user_info').doc(userId).get();
+          await FirebaseFirestore.instance
+              .collection('user_info')
+              .doc(userId)
+              .get();
       if (userInfoDoc.exists) {
         return userInfoDoc['avatarUrl'] as String?;
       }
@@ -94,10 +127,13 @@ class _SearchPageState extends State<SearchPage> {
     return null;
   }
 
-    Future<String?> _fetchDoctorFCMToken(String doctorId) async {
+  Future<String?> _fetchDoctorFCMToken(String doctorId) async {
     try {
-      DocumentSnapshot<Map<String, dynamic>> doctorDoc =
-          await FirebaseFirestore.instance.collection('doctors').doc(doctorId).get();
+      DocumentSnapshot<Map<String, dynamic>> doctorDoc = await FirebaseFirestore
+          .instance
+          .collection('doctors')
+          .doc(doctorId)
+          .get();
       if (doctorDoc.exists) {
         return doctorDoc['fcmToken'] as String?;
       }
@@ -143,15 +179,10 @@ class _SearchPageState extends State<SearchPage> {
             return Center(child: Text('No results found.'));
           }
 
-          var filteredDoctors = snapshot.data!.docs.where((doctor) {
-            var name = doctor['name']?.toString().toLowerCase() ?? '';
-            return name.contains(_searchController.text.toLowerCase());
-          }).toList();
-
           return ListView.builder(
-            itemCount: filteredDoctors.length,
+            itemCount: snapshot.data!.docs.length,
             itemBuilder: (context, index) {
-              var doctor = filteredDoctors[index];
+              var doctor = snapshot.data!.docs[index];
               var name = doctor['name']?.toString() ?? 'No Name';
               var doctorId = doctor.id;
 
@@ -163,9 +194,30 @@ class _SearchPageState extends State<SearchPage> {
                 ),
                 child: ListTile(
                   contentPadding: EdgeInsets.all(16),
-                  leading: CircleAvatar(
-                    backgroundImage: AssetImage('../../assets/images/doctor_1.jpg'),
-                    radius: 30,
+                  leading: FutureBuilder<String?>(
+                    future: fetchAvatarUrl(),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return CircleAvatar(
+                          radius: 30,
+                          backgroundColor: Colors.teal[
+                              300], // Use teal[300] as background color while waiting
+                        );
+                      }
+                      if (snapshot.hasData && snapshot.data != null) {
+                        return CircleAvatar(
+                          radius: 30,
+                          backgroundImage: AssetImage(snapshot.data!),
+                        );
+                      } else {
+                        // Default picture for users without avatars
+                        return CircleAvatar(
+                          radius: 30,
+                          backgroundImage:
+                              AssetImage('assets/images/anonymous.png'),
+                        );
+                      }
+                    },
                   ),
                   title: Text(
                     name,
@@ -175,16 +227,19 @@ class _SearchPageState extends State<SearchPage> {
                     ),
                   ),
                   subtitle: Text(
-                    'Specialty: ${doctor['specialty'] ?? 'No Specialty'}',
+                    'Location: ${doctor['state'] ?? 'Not specified'}',
                     style: TextStyle(
                       fontStyle: FontStyle.italic,
                     ),
                   ),
-                  trailing: ElevatedButton(
+                  trailing: IconButton(
+                    icon: Icon(
+                      Icons.person_add,
+                      color: Colors.teal[300],
+                    ),
                     onPressed: () {
                       _requestDoctor(doctorId);
                     },
-                    child: Text('Request'),
                   ),
                 ),
               );

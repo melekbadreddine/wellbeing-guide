@@ -79,7 +79,7 @@ class _CustomAppBarState extends State<DoctorAppBar> {
       if (currentUser != null) {
         DocumentSnapshot<Map<String, dynamic>> userInfoDoc =
             await FirebaseFirestore.instance
-                .collection('user_info')
+                .collection('doctors')
                 .doc(currentUser.uid)
                 .get();
         if (userInfoDoc.exists) {
@@ -143,7 +143,7 @@ class _CustomAppBarState extends State<DoctorAppBar> {
                         if (downloadUrl != null) {
                           // Update the user's avatar URL in Firestore
                           await FirebaseFirestore.instance
-                              .collection('user_info')
+                              .collection('doctors')
                               .doc(userId)
                               .update({'avatarUrl': downloadUrl});
                         }
@@ -265,16 +265,15 @@ Future<String?> fetchUsername() async {
     if (currentUser != null) {
       DocumentSnapshot<Map<String, dynamic>> userInfoDoc =
           await FirebaseFirestore.instance
-              .collection('user_info')
+              .collection('doctors')
               .doc(currentUser.uid)
               .get();
       if (userInfoDoc.exists) {
         // Check if the document exists
-        var username = userInfoDoc['name'] ?? '';
-        var familyName = userInfoDoc['family_name'] ?? '';
+        var name = userInfoDoc['name'] ?? '';
 
-        if (username.isNotEmpty && familyName.isNotEmpty) {
-          return '$username $familyName';
+        if (name.isNotEmpty) {
+          return name;
         }
       }
     }

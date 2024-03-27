@@ -1,6 +1,7 @@
 import 'package:CareCompanion/patient/formulaire.dart';
 import 'package:CareCompanion/patient/home_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -59,8 +60,7 @@ class _FilePageState extends State<FilePage> {
       CollectionReference userCollection =
           FirebaseFirestore.instance.collection('user_form');
 
-      DocumentSnapshot userDoc =
-          await userCollection.doc(userId).get();
+      DocumentSnapshot userDoc = await userCollection.doc(userId).get();
 
       return userDoc.exists; // Return true if the document exists (form filled)
     } catch (e) {
@@ -99,7 +99,8 @@ class _FilePageState extends State<FilePage> {
           ),
         ),
         backgroundColor: Colors.teal[300],
-        iconTheme: IconThemeData(color: Colors.white), // Change back arrow color to cyan
+        iconTheme: IconThemeData(
+            color: Colors.white), // Change back arrow color to cyan
       ),
       body: Container(
         padding: const EdgeInsets.all(16.0),
@@ -187,7 +188,8 @@ class _FilePageState extends State<FilePage> {
               SizedBox(height: 16.0),
               DropdownButtonFormField<String>(
                 value: selectedState,
-                style: TextStyle(color: Colors.black), // Text color for the input field
+                style: TextStyle(
+                    color: Colors.black), // Text color for the input field
                 decoration: InputDecoration(
                   labelText: 'Gouvernorat',
                   labelStyle: const TextStyle(color: Colors.black),
@@ -201,7 +203,8 @@ class _FilePageState extends State<FilePage> {
                   ),
                   suffixIcon: Icon(Icons.location_on, color: Colors.cyan),
                 ),
-                items: tunisiaStates.map<DropdownMenuItem<String>>((String value) {
+                items:
+                    tunisiaStates.map<DropdownMenuItem<String>>((String value) {
                   return DropdownMenuItem<String>(
                     value: value,
                     child: Text(
@@ -212,7 +215,8 @@ class _FilePageState extends State<FilePage> {
                     ),
                   );
                 }).toList(),
-                dropdownColor: Colors.white, // Background color for dropdown menu
+                dropdownColor:
+                    Colors.white, // Background color for dropdown menu
                 onChanged: (String? value) {
                   setState(() {
                     selectedState = value;
@@ -228,7 +232,8 @@ class _FilePageState extends State<FilePage> {
               SizedBox(height: 16.0),
               DropdownButtonFormField<Gender>(
                 value: selectedGender,
-                style: TextStyle(color: Colors.black), // Text color for the input field
+                style: TextStyle(
+                    color: Colors.black), // Text color for the input field
                 decoration: InputDecoration(
                   labelText: 'Genre',
                   labelStyle: const TextStyle(color: Colors.black),
@@ -241,7 +246,8 @@ class _FilePageState extends State<FilePage> {
                     borderSide: const BorderSide(color: Colors.black),
                   ),
                 ),
-                items: Gender.values.map<DropdownMenuItem<Gender>>((Gender value) {
+                items:
+                    Gender.values.map<DropdownMenuItem<Gender>>((Gender value) {
                   return DropdownMenuItem<Gender>(
                     value: value,
                     child: Text(
@@ -252,7 +258,8 @@ class _FilePageState extends State<FilePage> {
                     ),
                   );
                 }).toList(),
-                dropdownColor: Colors.white, // Background color for dropdown menu
+                dropdownColor:
+                    Colors.white, // Background color for dropdown menu
                 onChanged: (Gender? value) {
                   setState(() {
                     selectedGender = value;
@@ -366,6 +373,9 @@ class _FilePageState extends State<FilePage> {
         User? currentUser = FirebaseAuth.instance.currentUser;
 
         if (currentUser != null) {
+          // Get FCM token
+          String? fcmToken = await FirebaseMessaging.instance.getToken();
+
           // Reference to the users collection in Firestore
           CollectionReference patientsData =
               FirebaseFirestore.instance.collection('user_info');
@@ -381,6 +391,7 @@ class _FilePageState extends State<FilePage> {
                 hasChromaticDisease ? diseasesController.text : null,
             'is_taking_medicine': isTakingMedicine,
             'medicines': isTakingMedicine ? medicinesController.text : null,
+            'fcm_token': fcmToken, // Store FCM token
           });
 
           // Clear the text fields after submission
@@ -395,19 +406,20 @@ class _FilePageState extends State<FilePage> {
             hasChromaticDisease = false;
             isTakingMedicine = false;
           });
-          if(await checkIfUserFilledForm(currentUser.uid)){
+          if (await checkIfUserFilledForm(currentUser.uid)) {
             Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-                builder: (context) => const HomePage()), // Replace with your HomePage widget
-          );
-          }
-          else {
+              context,
+              MaterialPageRoute(
+                builder: (context) => const HomePage(),
+              ),
+            );
+          } else {
             Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-                builder: (context) => const MyForm()), // Replace with your HomePage widget
-          );
+              context,
+              MaterialPageRoute(
+                builder: (context) => const MyForm(),
+              ),
+            );
           }
         }
       } catch (e) {
