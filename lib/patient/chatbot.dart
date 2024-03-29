@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(Chatbot());
 }
 
@@ -25,20 +30,47 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   final TextEditingController _messageController = TextEditingController();
   List<Map<String, dynamic>> _messages = [];
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  void sendMessage(String text) async {
-    if (text.isEmpty) return;
+void sendMessage(String text) async {
+  if (text.isEmpty) return;
 
+  try {
+    setState(() {
+      _messages.insert(0, {'content': text, 'isUserMessage': true, 'shouldAnimate': true});
+      _messageController.clear();
+    });
+
+    // Fetch current user ID
+    String? userId = (_auth.currentUser != null) ? _auth.currentUser?.uid : null;
+    if (userId != null) {
+      DocumentSnapshot userSnapshot = await _firestore.collection('user_info').doc(userId).get();
+      if (userSnapshot.exists) {
+        // Access user information here
+        Map<String, dynamic> userInfo = userSnapshot.data() as Map<String, dynamic>;
+        // Send user information along with the message to Flask server
+        await sendToFlask(text, userInfo);
+      }
+    }
+  } catch (e) {
+    print('Error in sendMessage: $e');
+  }
+}
+
+
+  Future<void> sendToFlask(String text, Object userInfo) async {
     try {
-      setState(() {
-        _messages.insert(0, {'content': text, 'isUserMessage': true, 'shouldAnimate': true});
-        _messageController.clear();
-      });
+      // Combine user input and user information
+      Map<String, dynamic> requestData = {
+        'user_input': text,
+        'user_info': userInfo,
+      };
 
       var response = await http.post(
         Uri.parse('http://10.0.2.2:5000/chat'),
         headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({'user_input': text}),
+        body: jsonEncode(requestData),
       );
 
       var jsonResponse = jsonDecode(response.body);
@@ -47,7 +79,7 @@ class _HomeState extends State<Home> {
         _messages.insert(0, {'content': jsonResponse['ai_response'], 'isUserMessage': false, 'shouldAnimate': true});
       });
     } catch (e) {
-      print('Error in sendMessage: $e');
+      print('Error in sendToFlask: $e');
     }
   }
 

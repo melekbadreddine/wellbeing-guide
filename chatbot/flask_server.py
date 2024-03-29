@@ -18,10 +18,25 @@ message_text = [
 @app.route('/chat', methods=['POST'])
 def chat():
     user_input = request.json['user_input']
+    user_info = request.json.get('user_info', {})  # Extract user information
 
     message_text.append({"role": "user", "content": user_input})
 
-    # Create a chat completion
+    # Generate response considering user information
+    ai_response = generate_response(user_input, user_info, message_text)
+
+    # Add the AI's response to the conversation
+    message_text.append({"role": "assistant", "content": ai_response})
+
+    return jsonify({'ai_response': ai_response})
+
+def generate_response(user_input, user_info, message_text):
+    # Append user information to the conversation history
+    if user_info:
+        user_info_message = {"role": "system", "content": f"User Info: {user_info}"}
+        message_text.append(user_info_message)
+
+    # Pass the updated conversation history to OpenAI for response generation
     completion = openai.ChatCompletion.create(
         engine="Test",
         messages=message_text,
@@ -33,12 +48,10 @@ def chat():
         stop=None
     )
 
+    # Extract the AI's response from the completion
     ai_response = completion.choices[0].message['content']
 
-    # Add the AI's response to the conversation
-    message_text.append({"role": "assistant", "content": ai_response})
-
-    return jsonify({'ai_response': ai_response})
+    return ai_response
 
 if __name__ == '__main__':
     app.run(port=5000)
