@@ -186,14 +186,15 @@ Future<bool> fetchDoctor() async {
     User? currentUser = FirebaseAuth.instance.currentUser;
 
     if (currentUser != null) {
-      // Check if the user is a doctor
-      QuerySnapshot<Map<String, dynamic>> doctorSnapshot =
+      // Fetch the 'doctor' attribute from the 'user_info' collection
+      DocumentSnapshot<Map<String, dynamic>> userInfoDoc =
           await FirebaseFirestore.instance
-              .collection('doctors')
-              .where('user_id', isEqualTo: currentUser.uid)
+              .collection('user_info')
+              .doc(currentUser.uid)
               .get();
 
-      return doctorSnapshot.docs.isNotEmpty;
+      // Check if the 'doctor' attribute exists and is true
+      return userInfoDoc.exists && userInfoDoc['doctor'] == true;
     }
 
     return false; // Return false if user is not found
@@ -202,6 +203,7 @@ Future<bool> fetchDoctor() async {
     return false;
   }
 }
+
 
 
 class _HomePageState extends State<HomePage> {

@@ -45,7 +45,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'CareCompanion App',
+      title: 'Cognitive Therapy App',
       home: LoadingScreen(),
     );
   }

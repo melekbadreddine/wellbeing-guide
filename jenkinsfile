@@ -1,36 +1,57 @@
 pipeline {
     agent any
-    
+
+    environment {
+        DOCKER_USERNAME = credentials('DOCKER_USERNAME')
+        DOCKER_PASSWORD = credentials('DOCKER_PASSWORD')
+        KUBE_CONFIG = credentials('KUBE_CONFIG')
+    }
+
     stages {
-        stage('Build Android') {
+        stage('Checkout') {
             steps {
-                sh 'flutter build apk' 
+                checkout scm
             }
         }
-        stage('Build iOS') {
+
+        stage('Build') {
+            agent {
+                docker {
+                    image 'subosito/flutter:2.x'
+                }
+            }
             steps {
-                sh 'flutter build ios' 
+                sh 'flutter pub get'
+                sh 'flutter analyze'
+                sh 'flutter build apk'
             }
         }
-        stage('Test') {
+
+        stage('Build and Push Docker Image') {
             steps {
-                sh 'flutter test'
+                script {
+                    docker.withRegistry('https://index.docker.io/v1/', DOCKER_USERNAME, DOCKER_PASSWORD) {
+                        def image = docker.build('chatbot:latest', '.')
+                        image.push()
+                    }
+                }
             }
         }
-        stage('Build Flutter App') {
+
+        stage('Deploy to Kubernetes') {
             steps {
-                sh 'docker build -f flutter_mobile_app.Dockerfile -t your-registry/flutter-mobile-app:latest .'
+                script {
+                    withCredentials([file(credentialsId: 'KUBE_CONFIG', variable: 'KUBE_CONFIG_FILE')]) {
+                        sh 'kubectl apply -f deployment.yaml --kubeconfig=$KUBE_CONFIG_FILE'
+                    }
+                }
             }
         }
-        stage('Build Chatbot Server') {
-            steps {
-                sh 'docker build -t your-registry/flask-chatbot-server:latest ./chatbot'
-            }
-        }
-        stage('Deploy') {
-            steps {
-                sh 'kubectl apply -f deployment.yaml'
-            }
+    }
+
+    post {
+        always {
+            cleanWs()
         }
     }
 }
