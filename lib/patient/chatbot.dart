@@ -1,9 +1,6 @@
-import 'package:CareCompanion/patient/home_page.dart';
-import 'package:dialog_flowtter/dialog_flowtter.dart';
 import 'package:flutter/material.dart';
-import 'package:hexcolor/hexcolor.dart';
-import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 void main() {
   runApp(Chatbot());
@@ -26,236 +23,103 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  late DialogFlowtter dialogFlowtter;
-  final TextEditingController messageController = TextEditingController();
+  final TextEditingController _messageController = TextEditingController();
+  List<Map<String, dynamic>> _messages = [];
 
-  List<Map<String, dynamic>> messages = [];
+  void sendMessage(String text) async {
+    if (text.isEmpty) return;
 
-  @override
-  void initState() {
-    super.initState();
-    DialogFlowtter.fromFile().then((instance) => dialogFlowtter = instance);
-  }
-
-  Future<void> fetchChatResponse(String userMessage) async {
-    final response = await http.post(
-      Uri.parse('http://127.0.0.1:5000/chat'), // Replace with your server URL
-      headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({'user_input': userMessage}),
-    );
-
-    if (response.statusCode == 200) {
-      final Map<String, dynamic> data = jsonDecode(response.body);
+    try {
       setState(() {
-        messages = List.from(data['conversation']);
+        _messages.insert(0, {'content': text, 'isUserMessage': true, 'shouldAnimate': true});
+        _messageController.clear();
       });
-    } else {
-      throw Exception('Failed to load chat response');
+
+      var response = await http.post(
+        Uri.parse('http://10.0.2.2:5000/chat'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({'user_input': text}),
+      );
+
+      var jsonResponse = jsonDecode(response.body);
+
+      setState(() {
+        _messages.insert(0, {'content': jsonResponse['ai_response'], 'isUserMessage': false, 'shouldAnimate': true});
+      });
+    } catch (e) {
+      print('Error in sendMessage: $e');
     }
   }
 
-void sendMessage(String text) async {
-  if (text.isEmpty) return;
-
-  try {
-    setState(() {
-      addMessage(
-        Message(text: DialogText(text: [text])),
-        true,
-      );
-      messageController.clear(); // Clear the input field
-    });
-
-    var response = await http.post(
-      Uri.parse('http://10.0.2.2:5000/chat'), // Use the correct server URL
-      headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({'user_input': text}),
-    );
-
-    print('Server response: ${response.body}');
-
-    // Parse the server response if needed
-    var jsonResponse = jsonDecode(response.body);
-
-    setState(() {
-      addMessage(Message(text: DialogText(text: [jsonResponse['ai_response']])));
-    });
-  } catch (e) {
-    print('Error in sendMessage: $e');
-  }
-}
-
-
-  void addMessage(Message message, [bool isUserMessage = false]) {
-    messages.add({
-      'message': message,
-      'isUserMessage': isUserMessage,
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
-    var themeValue = MediaQuery.of(context).platformBrightness;
     return Scaffold(
-      backgroundColor: themeValue == Brightness.dark
-          ? HexColor('#262626')
-          : HexColor('#FFFFFF'),
       appBar: AppBar(
-        title: const Text(
-          'Chatbot',
-          style: TextStyle(
-            color: Colors.white, // Change text color to cyan
-          ),
-        ),
-        backgroundColor: Colors.teal[300],
-        iconTheme: IconThemeData(color: Colors.white),
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => HomePage()),
-            );
-          },
-        ),
+        title: Text('Chatbot'),
       ),
-      body: SafeArea(
-        child: Column(
-          children: [
-            Expanded(child: Body(messages: messages)),
-            Container(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 10,
-                vertical: 5,
-              ),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: TextFormField(
-                      controller: messageController,
+      body: Column(
+        children: [
+          Expanded(
+            child: ListView.builder(
+              reverse: true, // Reverse the order of messages
+              itemCount: _messages.length,
+              itemBuilder: (context, index) {
+                final message = _messages[index]['content'];
+                final isUserMessage = _messages[index]['isUserMessage'];
+                final shouldAnimate = _messages[index]['shouldAnimate'];
+
+                return AnimatedAlign(
+                  alignment: isUserMessage ? Alignment.centerRight : Alignment.centerLeft,
+                  duration: Duration(milliseconds: shouldAnimate ? 500 : 0),
+                  curve: shouldAnimate ? Curves.easeInOut : Curves.linear,
+                  onEnd: () {
+                    setState(() {
+                      _messages[index]['shouldAnimate'] = false;
+                    });
+                  },
+                  child: AnimatedContainer(
+                    margin: EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+                    padding: EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: isUserMessage ? Colors.blue : Colors.grey[300],
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    duration: Duration(milliseconds: shouldAnimate ? 500 : 0),
+                    curve: shouldAnimate ? Curves.easeInOut : Curves.linear,
+                    child: Text(
+                      message,
                       style: TextStyle(
-                          color: themeValue == Brightness.dark
-                              ? Colors.white
-                              : Colors.black,
-                          fontFamily: 'Poppins'),
-                      decoration: new InputDecoration(
-                        enabledBorder: new OutlineInputBorder(
-                            borderSide: new BorderSide(
-                                color: themeValue == Brightness.dark
-                                    ? Colors.white
-                                    : Colors.black),
-                            borderRadius: BorderRadius.circular(15)),
-                        hintStyle: TextStyle(
-                          color: themeValue == Brightness.dark
-                              ? Colors.white54
-                              : Colors.black54,
-                          fontSize: 15,
-                          fontStyle: FontStyle.italic,
-                        ),
-                        labelStyle: TextStyle(
-                            color: themeValue == Brightness.dark
-                                ? Colors.white
-                                : Colors.black),
-                        hintText: 'Send a message',
+                        color: isUserMessage ? Colors.white : Colors.black,
+                        fontSize: 16,
                       ),
                     ),
                   ),
-                  IconButton(
-                    color: themeValue == Brightness.dark
-                        ? Colors.white
-                        : Colors.black,
-                    icon: Icon(Icons.send),
-                    onPressed: () {
-                      sendMessage(messageController.text);
-                    },
+                );
+              },
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    controller: _messageController,
+                    decoration: InputDecoration(
+                      hintText: 'Enter message...',
+                      border: OutlineInputBorder(),
+                    ),
                   ),
-                ],
-              ),
+                ),
+                SizedBox(width: 8),
+                ElevatedButton(
+                  onPressed: () => sendMessage(_messageController.text),
+                  child: Text('Send'),
+                ),
+              ],
             ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  @override
-  void dispose() {
-    dialogFlowtter.dispose();
-    super.dispose();
-  }
-}
-
-class Body extends StatelessWidget {
-  final List<Map<String, dynamic>> messages;
-
-  const Body({
-    Key? key,
-    this.messages = const [],
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return ListView.separated(
-      itemBuilder: (context, i) {
-        var obj = messages[messages.length - 1 - i];
-        Message message = obj['message'];
-        bool isUserMessage = obj['isUserMessage'] ?? false;
-        return Row(
-          mainAxisAlignment:
-              isUserMessage ? MainAxisAlignment.end : MainAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            _MessageContainer(
-              message: message,
-              isUserMessage: isUserMessage,
-            ),
-          ],
-        );
-      },
-      separatorBuilder: (_, i) => Container(height: 10),
-      itemCount: messages.length,
-      reverse: true,
-      padding: const EdgeInsets.symmetric(
-        horizontal: 10,
-        vertical: 20,
-      ),
-    );
-  }
-}
-
-class _MessageContainer extends StatelessWidget {
-  final Message message;
-  final bool isUserMessage;
-
-  const _MessageContainer({
-    Key? key,
-    required this.message,
-    this.isUserMessage = false,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    final Color? bgColor = isUserMessage ? Colors.grey[600] : Colors.grey[600];
-    final Color textColor = isUserMessage ? Colors.white : Colors.white;
-
-    return Container(
-      constraints: BoxConstraints(maxWidth: 250),
-      child: LayoutBuilder(
-        builder: (context, constraints) {
-          return Container(
-            decoration: BoxDecoration(
-              color: bgColor,
-              borderRadius: BorderRadius.circular(20),
-            ),
-            padding: const EdgeInsets.all(10),
-            child: Text(
-              message.text?.text?[0] ?? '',
-              style: TextStyle(
-                color: textColor,
-              ),
-            ),
-          );
-        },
+          ),
+        ],
       ),
     );
   }
