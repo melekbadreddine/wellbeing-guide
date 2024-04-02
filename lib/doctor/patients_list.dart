@@ -1,3 +1,4 @@
+import 'package:CareCompanion/doctor/patient_detail.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -70,7 +71,8 @@ class _PatientsListState extends State<PatientsList> {
 
               var userData = snapshot.data!.data()!;
               var name = userData['name'] ?? 'Unknown';
-              var avatarUrl = userData['avatarUrl'] ?? 'assets/images/anonymous.png';
+              var avatarUrl =
+                  userData['avatarUrl'] ?? 'assets/images/anonymous.png';
 
               return ListTile(
                 leading: CircleAvatar(
@@ -78,7 +80,13 @@ class _PatientsListState extends State<PatientsList> {
                 ),
                 title: Text(name),
                 onTap: () {
-                  // Navigate to patient details page
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) =>
+                          PatientProfileScreen(patientId: patientId),
+                    ),
+                  );
                 },
               );
             },
