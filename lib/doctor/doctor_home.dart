@@ -1,7 +1,6 @@
 import 'package:CareCompanion/authentication/login.dart';
+import 'package:CareCompanion/doctor/appointment.dart';
 import 'package:CareCompanion/doctor/patients_list.dart';
-import 'package:CareCompanion/patient/notifications.dart';
-import 'package:CareCompanion/patient/search_page.dart';
 import 'package:CareCompanion/widgets/doctor_app_bar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -65,61 +64,65 @@ class _HomeScreenState extends State<HomeScreen> {
         },
       ),
       drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: [
-            DrawerHeader(
-              decoration: BoxDecoration(
-                color: Colors.blue,
-              ),
-              child: Text(
-                'Settings',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 24,
-                ),
-              ),
-            ),
-            ListTile(
-              leading: Icon(Icons.person),
-              title: Text('Profil'),
-              onTap: () {
-                // Navigate to Profile page
-              },
-            ),
-            ListTile(
-              leading: Icon(Icons.search),
-              title: Text('Recherche'),
-              onTap: () {
-                // Navigate to Search page
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => SearchPage()),
-                );
-              },
-            ),
-            ListTile(
-              leading: Icon(Icons.notifications),
-              title: Text('Notifications'),
-              onTap: () {
-                // Navigate to Notifications page
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => Notifications()),
-                );
-              },
-            ),
-            ListTile(
-              leading: Icon(Icons.logout),
-              title: Text('Déconnecter'),
-              onTap: () {
-                    // Perform sign out
-                    _signOut(context);
-                  },
-            ),
-          ],
+  child: ListView(
+    padding: EdgeInsets.zero,
+    children: [
+      DrawerHeader(
+        decoration: BoxDecoration(
+          color: Colors.blue,
+        ),
+        child: Text(
+          'Settings',
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 24,
+          ),
         ),
       ),
+      ListTile(
+        leading: Icon(Icons.person),
+        title: Text('Profil'),
+        onTap: () {
+          // Navigate to Profile page
+        },
+      ),
+      ListTile(
+        leading: Icon(Icons.search),
+        title: Text('Recherche'),
+        onTap: () {
+          // Navigate to Search page
+        },
+      ),
+      ListTile(
+        leading: Icon(Icons.event),
+        title: Text('Appointments'),
+        onTap: () {
+          // Navigate to Calendar page
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => Calendar()),
+          );
+        },
+      ),
+      ListTile(
+        leading: Icon(Icons.notifications),
+        title: Text('Notifications'),
+        onTap: () {
+          // Navigate to Notifications page
+        },
+      ),
+      ListTile(
+        leading: Icon(Icons.logout),
+        title: Text('Déconnecter'),
+        onTap: () {
+          // Perform sign out
+          _signOut(context);
+        },
+      ),
+    ],
+  ),
+),
+
       body: ListView(
         children: [
           ListTile(
