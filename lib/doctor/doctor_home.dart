@@ -1,7 +1,9 @@
 import 'package:CareCompanion/authentication/login.dart';
+import 'package:CareCompanion/doctor/patients_list.dart';
 import 'package:CareCompanion/patient/notifications.dart';
 import 'package:CareCompanion/patient/search_page.dart';
 import 'package:CareCompanion/widgets/doctor_app_bar.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -25,6 +27,30 @@ Future<void> _signOut(BuildContext context) async {
   }
 
 class _HomeScreenState extends State<HomeScreen> {
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  List<String> _patientList = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchPatientList();
+  }
+
+  Future<void> _fetchPatientList() async {
+    String? currentUserId = _auth.currentUser?.uid;
+    if (currentUserId != null) {
+      DocumentSnapshot<Map<String, dynamic>> doctorDoc =
+          await _firestore.collection('doctors').doc(currentUserId).get();
+      if (doctorDoc.exists) {
+        List<dynamic> patientList = doctorDoc.data()!['patient_list'];
+        setState(() {
+          _patientList = patientList.cast<String>();
+        });
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -141,9 +167,19 @@ class _HomeScreenState extends State<HomeScreen> {
               ],
             ),
           ),
-          ListTile(
-            title: Text('Patient profiles'),
-            trailing: Icon(Icons.arrow_forward),
+          
+          GestureDetector( // Wrap ListTile with GestureDetector
+            onTap: () {
+              // Navigate to PatientsList page
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => PatientsList()),
+              );
+            },
+            child: ListTile(
+              title: Text('Patient profiles'),
+              trailing: Icon(Icons.arrow_forward),
+            ),
           ),
           SizedBox(height: 8.0),
           Row(
@@ -153,22 +189,22 @@ class _HomeScreenState extends State<HomeScreen> {
                 backgroundColor: Colors.teal,
                 child: Icon(Icons.add),
               ),
-              SizedBox(width: 8.0),
-              CircleAvatar(
-                backgroundImage: AssetImage('assets/images/patient3.jpg'),
-              ),
-              SizedBox(width: 8.0),
-              CircleAvatar(
-                backgroundImage: AssetImage('assets/images/patient4.jpg'),
-              ),
-              SizedBox(width: 8.0),
-              CircleAvatar(
-                backgroundImage: AssetImage('assets/images/patient5.jpg'),
-              ),
-              SizedBox(width: 8.0),
-              CircleAvatar(
-                backgroundImage: AssetImage('assets/images/patient6.jpg'),
-              ),
+              ..._patientList.map((patientId) => FutureBuilder<DocumentSnapshot<Map<String, dynamic>>>(
+                future: _firestore.collection('user_info').doc(patientId).get(),
+                builder: (context, snapshot) {
+                  if (snapshot.hasData && snapshot.data!.exists) {
+                    String avatarUrl = snapshot.data!.data()!['avatarUrl'];
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                      child: CircleAvatar(
+                        backgroundImage: NetworkImage(avatarUrl),
+                      ),
+                    );
+                  } else {
+                    return SizedBox();
+                  }
+                },
+              )).toList(),
             ],
           ),
           SizedBox(height: 16.0),

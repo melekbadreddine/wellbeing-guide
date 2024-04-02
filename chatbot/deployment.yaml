@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: flask
-          image: chatbot:latest
+          image: melekbadreddine/chatbot:latest # Update this line
           ports:
             - containerPort: 5000
 ---
