@@ -12,7 +12,7 @@ class SearchPage extends StatefulWidget {
 
 class _SearchPageState extends State<SearchPage> {
   final TextEditingController _searchController = TextEditingController();
-  late Stream<QuerySnapshot<Map<String, dynamic>>> _searchResults;
+  late Stream<List<DocumentSnapshot<Map<String, dynamic>>>> _searchResults;
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
 
   @override
@@ -22,55 +22,41 @@ class _SearchPageState extends State<SearchPage> {
     _firebaseMessaging.requestPermission();
   }
 
-  Stream<QuerySnapshot<Map<String, dynamic>>> _searchDoctors(String query) {
+  Stream<List<DocumentSnapshot<Map<String, dynamic>>>> _searchDoctors(String query) {
     CollectionReference<Map<String, dynamic>> doctorsCollection =
         FirebaseFirestore.instance.collection('doctors');
 
-    // Construct the query to fetch documents with 'name' and 'state' fields
-    Query<Map<String, dynamic>> querySnapshot = doctorsCollection
-        .where('name', isGreaterThanOrEqualTo: query.toLowerCase())
-        .where('name', isLessThanOrEqualTo: query.toLowerCase() + '\uf8ff');
+    // Convert the search query to lowercase for case-insensitive matching
+    String searchTerm = query.trim().toLowerCase();
+    print('Search term: $searchTerm');
 
-    return querySnapshot.snapshots();
+    // Return the stream of all documents in the 'doctors' collection
+    // Filter the documents locally based on the search query
+    return doctorsCollection.snapshots().map((snapshot) => snapshot.docs.where((doc) {
+      String name = doc['name']?.toLowerCase() ?? '';
+      return name.contains(searchTerm);
+    }).toList());
   }
 
-  Future<String?> fetchAvatarUrl() async {
+  Future<String?> fetchAvatarUrl(String userId) async {
     try {
-      User? currentUser = FirebaseAuth.instance.currentUser;
-
-      if (currentUser != null) {
-        DocumentSnapshot<Map<String, dynamic>> userInfoDoc =
-            await FirebaseFirestore.instance
-                .collection('doctors')
-                .doc(currentUser.uid)
-                .get();
-        if (userInfoDoc.exists) {
-          String? avatarUrl = userInfoDoc['avatarUrl'] as String?;
-          if (avatarUrl != null) {
-            return avatarUrl;
-          } else {
-            // Default picture for users without avatars
-            return 'assets/images/anonymous.png';
-          }
-        }
+      DocumentSnapshot<Map<String, dynamic>> userInfoDoc =
+          await FirebaseFirestore.instance.collection('user_info').doc(userId).get();
+      if (userInfoDoc.exists) {
+        return userInfoDoc['avatarUrl'] as String?;
       }
-
-      return null;
     } catch (e) {
       print('Error fetching avatar URL: $e');
-      return null;
     }
+    return null;
   }
 
   Future<void> _requestDoctor(String doctorId) async {
     try {
       User? currentUser = FirebaseAuth.instance.currentUser;
       if (currentUser != null) {
-        DocumentReference userInfoRef = FirebaseFirestore.instance
-            .collection('user_info')
-            .doc(currentUser.uid);
-        DocumentReference doctorRef =
-            FirebaseFirestore.instance.collection('doctors').doc(doctorId);
+        DocumentReference userInfoRef = FirebaseFirestore.instance.collection('user_info').doc(currentUser.uid);
+        DocumentReference doctorRef = FirebaseFirestore.instance.collection('doctors').doc(doctorId);
 
         // Update the patient's 'doctor' field
         await userInfoRef.update({'doctor': doctorId});
@@ -78,7 +64,7 @@ class _SearchPageState extends State<SearchPage> {
         // Create a notification in the doctor's 'notifications' collection
         await doctorRef.collection('notifications').doc(currentUser.uid).set({
           'patientId': currentUser.uid,
-          'avatarUrl': await _fetchUserAvatarUrl(currentUser.uid),
+          'avatarUrl': await fetchAvatarUrl(currentUser.uid),
           'timestamp': FieldValue.serverTimestamp(),
         });
 
@@ -111,29 +97,10 @@ class _SearchPageState extends State<SearchPage> {
     }
   }
 
-  Future<String?> _fetchUserAvatarUrl(String userId) async {
-    try {
-      DocumentSnapshot<Map<String, dynamic>> userInfoDoc =
-          await FirebaseFirestore.instance
-              .collection('user_info')
-              .doc(userId)
-              .get();
-      if (userInfoDoc.exists) {
-        return userInfoDoc['avatarUrl'] as String?;
-      }
-    } catch (e) {
-      print('Error fetching avatar URL: $e');
-    }
-    return null;
-  }
-
   Future<String?> _fetchDoctorFCMToken(String doctorId) async {
     try {
-      DocumentSnapshot<Map<String, dynamic>> doctorDoc = await FirebaseFirestore
-          .instance
-          .collection('doctors')
-          .doc(doctorId)
-          .get();
+      DocumentSnapshot<Map<String, dynamic>> doctorDoc =
+          await FirebaseFirestore.instance.collection('doctors').doc(doctorId).get();
       if (doctorDoc.exists) {
         return doctorDoc['fcmToken'] as String?;
       }
@@ -164,25 +131,21 @@ class _SearchPageState extends State<SearchPage> {
         backgroundColor: Colors.teal[300],
         iconTheme: IconThemeData(color: Colors.white),
       ),
-      body: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+      body: StreamBuilder<List<DocumentSnapshot<Map<String, dynamic>>>>(
         stream: _searchResults,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator());
           }
 
-          if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}'));
-          }
-
-          if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+          if (!snapshot.hasData || snapshot.data == null || snapshot.data!.isEmpty) {
             return Center(child: Text('No results found.'));
           }
 
           return ListView.builder(
-            itemCount: snapshot.data!.docs.length,
+            itemCount: snapshot.data!.length,
             itemBuilder: (context, index) {
-              var doctor = snapshot.data!.docs[index];
+              var doctor = snapshot.data![index];
               var name = doctor['name']?.toString() ?? 'No Name';
               var doctorId = doctor.id;
 
@@ -195,13 +158,12 @@ class _SearchPageState extends State<SearchPage> {
                 child: ListTile(
                   contentPadding: EdgeInsets.all(16),
                   leading: FutureBuilder<String?>(
-                    future: fetchAvatarUrl(),
+                    future: fetchAvatarUrl(doctorId),
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return CircleAvatar(
                           radius: 30,
-                          backgroundColor: Colors.teal[
-                              300], // Use teal[300] as background color while waiting
+                          backgroundColor: Colors.teal[300],
                         );
                       }
                       if (snapshot.hasData && snapshot.data != null) {
@@ -210,11 +172,9 @@ class _SearchPageState extends State<SearchPage> {
                           backgroundImage: AssetImage(snapshot.data!),
                         );
                       } else {
-                        // Default picture for users without avatars
                         return CircleAvatar(
                           radius: 30,
-                          backgroundImage:
-                              AssetImage('assets/images/anonymous.png'),
+                          backgroundImage: AssetImage('assets/images/anonymous.png'),
                         );
                       }
                     },
