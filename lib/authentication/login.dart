@@ -1,14 +1,14 @@
+import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import '../patient/file.dart'; // Import the file.dart containing FilePage
 import 'package:CareCompanion/authentication/reset_password.dart';
 import 'package:CareCompanion/doctor/doctor_form.dart';
 import 'package:CareCompanion/doctor/doctor_home.dart';
 import 'package:CareCompanion/patient/home_page.dart';
 import 'package:CareCompanion/authentication/signup.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
-import '../patient/file.dart'; // Import the file.dart containing FilePage
-import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -114,157 +114,159 @@ class _RegisterPageState extends State<RegisterPage> {
     }
   }
 
-Future<bool> checkIfDoctorFilledForm(String userId) async {
-  try {
-    CollectionReference doctorCollection =
-        FirebaseFirestore.instance.collection('doctors');
+  Future<bool> checkIfDoctorFilledForm(String userId) async {
+    try {
+      CollectionReference doctorCollection =
+          FirebaseFirestore.instance.collection('doctors');
 
-    DocumentSnapshot doctorDoc = await doctorCollection.doc(userId).get();
+      DocumentSnapshot doctorDoc = await doctorCollection.doc(userId).get();
 
-    // Check if the document exists
-    if (doctorDoc.exists) {
-      // Check if the document contains the 'name' attribute
-      Map<String, dynamic>? data = doctorDoc.data() as Map<String, dynamic>?;
-      return data != null && data.containsKey('name');
-    } else {
-      // Document does not exist, form not filled
+      // Check if the document exists
+      if (doctorDoc.exists) {
+        // Check if the document contains the 'name' attribute
+        Map<String, dynamic>? data = doctorDoc.data() as Map<String, dynamic>?;
+        return data != null && data.containsKey('name');
+      } else {
+        // Document does not exist, form not filled
+        return false;
+      }
+    } catch (e) {
+      print('Error checking doctor form: $e');
       return false;
     }
-  } catch (e) {
-    print('Error checking doctor form: $e');
-    return false;
   }
-}
 
+  Future<void> _signInAfterVerification() async {
+    try {
+      UserCredential signInCredential =
+          await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: emailController.text,
+        password: passwordController.text,
+      );
 
+      if (signInCredential.user != null &&
+          signInCredential.user!.emailVerified) {
+        // Save rememberMe option if checked
+        if (rememberMe) {
+          saveRememberMe();
+        }
 
+        bool emailExists = await checkIfEmailExists(emailController.text);
 
-Future<void> _signInAfterVerification() async {
-  try {
-    UserCredential signInCredential =
-        await FirebaseAuth.instance.signInWithEmailAndPassword(
-      email: emailController.text,
-      password: passwordController.text,
-    );
+        if (emailExists) {
+          // Email exists in the "doctors" collection
+          bool isDoctorFormFilled =
+              await checkIfDoctorFilledForm(signInCredential.user!.uid);
 
-    if (signInCredential.user != null &&
-        signInCredential.user!.emailVerified) {
-      bool emailExists = await checkIfEmailExists(emailController.text);
-
-      if (emailExists) {
-        // Email exists in the "doctors" collection
-        bool isDoctorFormFilled =
-            await checkIfDoctorFilledForm(signInCredential.user!.uid);
-
-        if (isDoctorFormFilled) {
-          // Doctor form is filled, navigate to HomeScreen
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => HomeScreen()),
-          ).then((_) {
-            emailController.clear();
-            passwordController.clear();
-          });
+          if (isDoctorFormFilled) {
+            // Doctor form is filled, navigate to HomeScreen
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => HomeScreen()),
+            ).then((_) {
+              emailController.clear();
+              passwordController.clear();
+            });
+          } else {
+            // Doctor form is not filled, navigate to DoctorFormPage
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => DoctorFormPage()),
+            ).then((_) {
+              emailController.clear();
+              passwordController.clear();
+            });
+          }
         } else {
-          // Doctor form is not filled, navigate to DoctorFormPage
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => DoctorFormPage()),
-          ).then((_) {
-            emailController.clear();
-            passwordController.clear();
-          });
+          // Email doesn't exist in the "doctors" collection (normal user)
+          bool isUserFormFilled =
+              await checkIfUserFilledForm(signInCredential.user!.uid);
+
+          if (isUserFormFilled) {
+            // User form is filled, navigate to HomePage
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => HomePage()),
+            ).then((_) {
+              emailController.clear();
+              passwordController.clear();
+            });
+          } else {
+            // User form is not filled, navigate to FilePage
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => FilePage()),
+            ).then((_) {
+              emailController.clear();
+              passwordController.clear();
+            });
+          }
         }
       } else {
-        // Email doesn't exist in the "doctors" collection (normal user)
-        bool isUserFormFilled =
-            await checkIfUserFilledForm(signInCredential.user!.uid);
-
-        if (isUserFormFilled) {
-          // User form is filled, navigate to HomePage
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => HomePage()),
-          ).then((_) {
-            emailController.clear();
-            passwordController.clear();
-          });
+        // Show the email not verified dialog
+        if (!signInCredential.user!.emailVerified) {
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: const Text('Email Not Verified'),
+                content: const Text('Please verify your email to log in.'),
+                actions: <Widget>[
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: const Text('OK'),
+                  ),
+                ],
+              );
+            },
+          );
         } else {
-          // User form is not filled, navigate to FilePage
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => FilePage()),
-          ).then((_) {
-            emailController.clear();
-            passwordController.clear();
-          });
+          // Show an alert for incorrect email or password
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: const Text('Login Failed'),
+                content: const Text(
+                    'The email or password you entered is incorrect.'),
+                actions: <Widget>[
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: const Text('OK'),
+                  ),
+                ],
+              );
+            },
+          );
         }
       }
-    } else {
-      // Show the email not verified dialog
-      if (!signInCredential.user!.emailVerified) {
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: const Text('Email Not Verified'),
-              content: const Text('Please verify your email to log in.'),
-              actions: <Widget>[
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: const Text('OK'),
-                ),
-              ],
-            );
-          },
-        );
-      } else {
-        // Show an alert for incorrect email or password
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: const Text('Login Failed'),
-              content: const Text(
-                  'The email or password you entered is incorrect.'),
-              actions: <Widget>[
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                  child: const Text('OK'),
-                ),
-              ],
-            );
-          },
-        );
-      }
+    } on FirebaseAuthException catch (e) {
+      // Show an alert for other FirebaseAuthException errors
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Error'),
+            content: Text('Error signing in: $e'),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
+    } catch (e) {
+      print(e);
     }
-  } on FirebaseAuthException catch (e) {
-    // Show an alert for other FirebaseAuthException errors
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Error'),
-          content: Text('Error signing in: $e'),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text('OK'),
-            ),
-          ],
-        );
-      },
-    );
-  } catch (e) {
-    print(e);
   }
-}
 
   @override
   Widget build(BuildContext context) {
