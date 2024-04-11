@@ -1,7 +1,7 @@
-import 'package:CareCompanion/authentication/login.dart';
-import 'package:CareCompanion/doctor/appointment.dart';
-import 'package:CareCompanion/doctor/patients_list.dart';
-import 'package:CareCompanion/widgets/doctor_app_bar.dart';
+import 'package:wellbeingGuide/authentication/login.dart';
+import 'package:wellbeingGuide/doctor/appointment.dart';
+import 'package:wellbeingGuide/doctor/patients_list.dart';
+import 'package:wellbeingGuide/widgets/doctor_app_bar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';

@@ -1,9 +1,9 @@
-import 'package:CareCompanion/authentication/login.dart';
-import 'package:CareCompanion/widgets/custom_app_bar.dart';
-import 'package:CareCompanion/widgets/custom_bottom_navigation_bar.dart';
+import 'package:wellbeingGuide/authentication/login.dart';
+import 'package:wellbeingGuide/widgets/custom_app_bar.dart';
+import 'package:wellbeingGuide/widgets/custom_bottom_navigation_bar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:CareCompanion/widgets/settings_tile.dart';
+import 'package:wellbeingGuide/widgets/settings_tile.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({Key? key}) : super(key: key);

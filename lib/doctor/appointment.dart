@@ -1,5 +1,5 @@
-import 'package:CareCompanion/widgets/custom_app_bar.dart';
-import 'package:CareCompanion/widgets/custom_bottom_navigation_bar.dart';
+import 'package:wellbeingGuide/widgets/custom_app_bar.dart';
+import 'package:wellbeingGuide/widgets/custom_bottom_navigation_bar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';

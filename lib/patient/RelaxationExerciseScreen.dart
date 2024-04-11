@@ -1,8 +1,8 @@
-import 'package:CareCompanion/patient/chatbot.dart';
-import 'package:CareCompanion/patient/more.dart';
-import 'package:CareCompanion/patient/settings.dart';
-import 'package:CareCompanion/widgets/custom_app_bar.dart';
-import 'package:CareCompanion/widgets/custom_bottom_navigation_bar.dart';
+import 'package:wellbeingGuide/patient/chatbot.dart';
+import 'package:wellbeingGuide/patient/more.dart';
+import 'package:wellbeingGuide/patient/settings.dart';
+import 'package:wellbeingGuide/widgets/custom_app_bar.dart';
+import 'package:wellbeingGuide/widgets/custom_bottom_navigation_bar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';

@@ -67,7 +67,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '451669329476',
     projectId: 'testchatbotalimipfa',
     storageBucket: 'testchatbotalimipfa.appspot.com',
-    iosBundleId: 'com.example.careCompanionApp',
+    iosBundleId: 'com.example.wellbeingGuideApp',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
@@ -76,6 +76,6 @@ class DefaultFirebaseOptions {
     messagingSenderId: '451669329476',
     projectId: 'testchatbotalimipfa',
     storageBucket: 'testchatbotalimipfa.appspot.com',
-    iosBundleId: 'com.example.careCompanionApp',
+    iosBundleId: 'com.example.wellbeingGuideApp',
   );
 }

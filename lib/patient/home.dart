@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:CareCompanion/patient/dashboard.dart';
-import 'package:CareCompanion/widgets/rectangle_button.dart';
+import 'package:wellbeingGuide/patient/dashboard.dart';
+import 'package:wellbeingGuide/widgets/rectangle_button.dart';
 import '../utils/utils.dart';
 
 class Home extends StatelessWidget {

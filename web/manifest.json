@@ -1,6 +1,6 @@
 {
-    "name": "care_companion_app",
-    "short_name": "care_companion_app",
+    "name": "wellbeing_guide_app",
+    "short_name": "wellbeing_guide_app",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

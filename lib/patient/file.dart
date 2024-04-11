@@ -1,5 +1,5 @@
-import 'package:CareCompanion/patient/formulaire.dart';
-import 'package:CareCompanion/patient/home_page.dart';
+import 'package:wellbeingGuide/patient/formulaire.dart';
+import 'package:wellbeingGuide/patient/home_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';

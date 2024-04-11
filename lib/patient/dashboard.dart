@@ -1,10 +1,10 @@
-import 'package:CareCompanion/exercises/breathing.dart';
-import 'package:CareCompanion/exercises/meditation.dart';
-import 'package:CareCompanion/exercises/relaxation.dart';
-import 'package:CareCompanion/exercises/yoga.dart';
-import 'package:CareCompanion/patient/RelaxationExerciseScreen.dart';
-import 'package:CareCompanion/patient/home_page.dart';
-import 'package:CareCompanion/widgets/doctor_item.dart';
+import 'package:wellbeingGuide/exercises/breathing.dart';
+import 'package:wellbeingGuide/exercises/meditation.dart';
+import 'package:wellbeingGuide/exercises/relaxation.dart';
+import 'package:wellbeingGuide/exercises/yoga.dart';
+import 'package:wellbeingGuide/patient/RelaxationExerciseScreen.dart';
+import 'package:wellbeingGuide/patient/home_page.dart';
+import 'package:wellbeingGuide/widgets/doctor_item.dart';
 import 'package:flutter/material.dart';
 
 class Dashboard extends StatelessWidget {

@@ -4,11 +4,11 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../patient/file.dart'; // Import the file.dart containing FilePage
-import 'package:CareCompanion/authentication/reset_password.dart';
-import 'package:CareCompanion/doctor/doctor_form.dart';
-import 'package:CareCompanion/doctor/doctor_home.dart';
-import 'package:CareCompanion/patient/home_page.dart';
-import 'package:CareCompanion/authentication/signup.dart';
+import 'package:wellbeingGuide/authentication/reset_password.dart';
+import 'package:wellbeingGuide/doctor/doctor_form.dart';
+import 'package:wellbeingGuide/doctor/doctor_home.dart';
+import 'package:wellbeingGuide/patient/home_page.dart';
+import 'package:wellbeingGuide/authentication/signup.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

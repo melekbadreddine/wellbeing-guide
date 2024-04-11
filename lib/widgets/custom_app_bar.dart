@@ -1,6 +1,6 @@
 import 'dart:io';
-import 'package:CareCompanion/patient/notifications.dart';
-import 'package:CareCompanion/patient/search_page.dart';
+import 'package:wellbeingGuide/patient/notifications.dart';
+import 'package:wellbeingGuide/patient/search_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';

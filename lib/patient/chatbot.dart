@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:wellbeingGuide/patient/home_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -88,12 +89,22 @@ void sendMessage(String text) async {
     return Scaffold(
       appBar: AppBar(
         title: Text('Chatbot'),
+        backgroundColor: Colors.teal,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => HomePage()),
+            );
+          },
+        ),
       ),
       body: Column(
         children: [
           Expanded(
             child: ListView.builder(
-              reverse: true, // Reverse the order of messages
+              reverse: true,
               itemCount: _messages.length,
               itemBuilder: (context, index) {
                 final message = _messages[index]['content'];
@@ -110,11 +121,11 @@ void sendMessage(String text) async {
                     });
                   },
                   child: AnimatedContainer(
-                    margin: EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-                    padding: EdgeInsets.all(12),
+                    margin: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                    padding: EdgeInsets.symmetric(vertical: 12, horizontal: 16),
                     decoration: BoxDecoration(
-                      color: isUserMessage ? Colors.blue : Colors.grey[300],
-                      borderRadius: BorderRadius.circular(16),
+                      color: isUserMessage ? Colors.teal : Colors.grey[300],
+                      borderRadius: BorderRadius.circular(20),
                     ),
                     duration: Duration(milliseconds: shouldAnimate ? 500 : 0),
                     curve: shouldAnimate ? Curves.easeInOut : Curves.linear,
@@ -131,22 +142,35 @@ void sendMessage(String text) async {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.all(16.0),
             child: Row(
               children: [
                 Expanded(
-                  child: TextField(
-                    controller: _messageController,
-                    decoration: InputDecoration(
-                      hintText: 'Enter message...',
-                      border: OutlineInputBorder(),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.grey[200],
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                    child: TextField(
+                      controller: _messageController,
+                      decoration: InputDecoration(
+                        hintText: 'Type your message...',
+                        border: InputBorder.none,
+                        contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                      ),
                     ),
                   ),
                 ),
-                SizedBox(width: 8),
-                ElevatedButton(
-                  onPressed: () => sendMessage(_messageController.text),
-                  child: Text('Send'),
+                SizedBox(width: 16),
+                GestureDetector(
+                  onTap: () => sendMessage(_messageController.text),
+                  child: CircleAvatar(
+                    backgroundColor: Colors.teal,
+                    child: Icon(
+                      Icons.send,
+                      color: Colors.white,
+                    ),
+                  ),
                 ),
               ],
             ),

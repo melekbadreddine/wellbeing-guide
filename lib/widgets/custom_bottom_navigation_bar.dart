@@ -1,6 +1,6 @@
-import 'package:CareCompanion/doctor/appointment.dart';
-import 'package:CareCompanion/patient/home_page.dart';
-import 'package:CareCompanion/patient/settings.dart';
+import 'package:wellbeingGuide/doctor/appointment.dart';
+import 'package:wellbeingGuide/patient/home_page.dart';
+import 'package:wellbeingGuide/patient/settings.dart';
 import 'package:flutter/material.dart';
 
 class CustomBottomNavigationBar extends StatelessWidget {

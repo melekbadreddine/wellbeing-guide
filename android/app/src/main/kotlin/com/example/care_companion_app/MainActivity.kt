@@ -1,4 +1,4 @@
-package com.example.care_companion_app
+package com.example.wellbeing_guide_app
 
 import io.flutter.embedding.android.FlutterActivity
 

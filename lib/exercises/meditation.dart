@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:CareCompanion/patient/home_page.dart';
+import 'package:wellbeingGuide/patient/home_page.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 
 class MeditationExercisePage extends StatelessWidget {

@@ -1,4 +1,4 @@
-name: CareCompanion
+name: wellbeingGuide
 description: A new Flutter project.
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
@@ -52,15 +52,11 @@ dependencies:
   table_calendar: ^3.0.9
   hexcolor: ^3.0.1
   dialog_flowtter: ^0.3.3
-  audioplayers: ^5.2.1
   flutter_widget_from_html: ^0.14.11
   flutter_driver:
     sdk: flutter
-  flutter_gherkin: ^2.0.0
-  bdd_widget_test: ^1.6.4
   image_picker: ^1.0.7
   firebase_storage: ^11.6.0
-  just_audio: ^0.9.36
   firebase_messaging: ^14.7.10
 
 dev_dependencies:

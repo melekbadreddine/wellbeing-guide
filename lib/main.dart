@@ -3,7 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:CareCompanion/patient/loading_screen.dart';
+import 'package:wellbeingGuide/patient/loading_screen.dart';
 import 'package:firebase_app_check/firebase_app_check.dart';
 
 void main() async {
@@ -45,7 +45,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Cognitive Therapy App',
+      title: 'Wellbeing Guide',
       home: LoadingScreen(),
     );
   }

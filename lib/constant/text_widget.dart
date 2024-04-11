@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:CareCompanion/constant/constant.dart';
+import 'package:wellbeingGuide/constant/constant.dart';
 
 class CustomText extends StatelessWidget {
   String text;
