@@ -54,4 +54,4 @@ def generate_response(user_input, user_info, message_text):
     return ai_response
 
 if __name__ == '__main__':
-    app.run(port=5000)
+    app.run(host='0.0.0.0', port=5000)

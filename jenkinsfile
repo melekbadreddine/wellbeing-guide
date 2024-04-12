@@ -2,9 +2,8 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_USERNAME = credentials('DOCKER_USERNAME')
-        DOCKER_PASSWORD = credentials('DOCKER_PASSWORD')
-        KUBE_CONFIG = credentials('KUBE_CONFIG')
+        AZURE_OAI_KEY = credentials('azure-openai-key')
+        AZURE_CREDENTIALS = credentials('azure-service-principal')
     }
 
     stages {
@@ -14,44 +13,71 @@ pipeline {
             }
         }
 
-        stage('Build') {
-            agent {
-                docker {
-                    image 'subosito/flutter:2.x'
-                }
-            }
+        stage('Build App') {
             steps {
-                sh 'flutter pub get'
-                sh 'flutter analyze'
-                sh 'flutter build apk'
+                sh '''
+                    flutter pub get
+                    flutter build apk
+                '''
             }
         }
 
-        stage('Build and Push Docker Image') {
+        stage('Build Docker Image') {
             steps {
                 script {
-                    docker.withRegistry('https://index.docker.io/v1/', DOCKER_USERNAME, DOCKER_PASSWORD) {
-                        def image = docker.build('chatbot:latest', '.')
-                        image.push()
+                    docker.withRegistry('https://registry.hub.docker.com', 'docker-hub-credentials') {
+                        def app = docker.build("melekbadreddine/chatbot:${env.BUILD_NUMBER}", "./chatbot")
+                        app.push()
                     }
                 }
             }
         }
 
-        stage('Deploy to Kubernetes') {
+        stage('Deploy to AKS') {
             steps {
                 script {
-                    withCredentials([file(credentialsId: 'KUBE_CONFIG', variable: 'KUBE_CONFIG_FILE')]) {
-                        sh 'kubectl apply -f deployment.yaml --kubeconfig=$KUBE_CONFIG_FILE'
-                    }
+                    def manifests = """
+                        apiVersion: apps/v1
+                        kind: Deployment
+                        metadata:
+                          name: flask-app
+                        spec:
+                          replicas: 2
+                          selector:
+                            matchLabels:
+                              app: flask-app
+                          template:
+                            metadata:
+                              labels:
+                                app: flask-app
+                            spec:
+                              containers:
+                              - name: flask
+                                image: melekbadreddine/chatbot:${env.BUILD_NUMBER}
+                                env:
+                                - name: AZURE_OAI_KEY
+                                  value: ${env.AZURE_OAI_KEY}
+                                ports:
+                                - containerPort: 5000
+                        ---
+                        apiVersion: v1
+                        kind: Service
+                        metadata:
+                          name: flask-app-service
+                        spec:
+                          selector:
+                            app: flask-app
+                          ports:
+                          - protocol: TCP
+                            port: 80
+                            targetPort: 5000
+                          type: LoadBalancer
+                    """
+
+                    def credentials = "${env.AZURE_CREDENTIALS}"
+                    sh "kubectl apply -f - --record --kubeconfig=\$(echo '$credentials' | base64 -d)"
                 }
             }
-        }
-    }
-
-    post {
-        always {
-            cleanWs()
         }
     }
 }

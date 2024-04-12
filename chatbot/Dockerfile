@@ -12,3 +12,5 @@ EXPOSE 5000
 CMD ["python", "flask_server.py"]
 
 #docker build -t chatbot:latest .
+#docker tag chatbot melekbadreddine/chatbot:latest
+#docker push  melekbadreddine/chatbot:latest
