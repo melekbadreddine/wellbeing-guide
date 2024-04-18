@@ -41,7 +41,7 @@ class _SearchPageState extends State<SearchPage> {
   Future<String?> fetchAvatarUrl(String userId) async {
     try {
       DocumentSnapshot<Map<String, dynamic>> userInfoDoc =
-          await FirebaseFirestore.instance.collection('user_info').doc(userId).get();
+          await FirebaseFirestore.instance.collection('doctor').doc(userId).get();
       if (userInfoDoc.exists) {
         return userInfoDoc['avatarUrl'] as String?;
       }
