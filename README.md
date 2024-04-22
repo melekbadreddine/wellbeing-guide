@@ -39,4 +39,7 @@ Ce projet est publié sous la licence [MIT](https://github.com/MelekBadreddine/w
 
 ## Contactez-nous
 
-Si vous avez des questions ou des commentaires, n'hésitez pas à nous contacter à l'adresse [badreddine.malek@enis.tn](mailto:badreddine.malek@enis.tn).
+Si vous avez des questions ou des commentaires, n'hésitez pas à nous contacter avec ces adresses:
+[badreddine.malek@enis.tn](mailto:badreddine.malek@enis.tn).
+[abbes.cherif@enis.tn](mailto:abbes.cherif@enis.tn).
+[boujelbene.yassine@enis.tn](mailto:boujelbene.yassine@enis.tn).
