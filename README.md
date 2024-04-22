@@ -2,10 +2,6 @@
 
 Wellbeing Guide est une plateforme mobile complète conçue pour fournir un soutien en matière de santé mentale aux patients et faciliter le travail des psychologues. Elle vise à offrir une assistance globale aux personnes confrontées à des problèmes de santé mentale, tout en simplifiant la prestation de soins pour les professionnels.
 
-## Fonctionnalités principales
-
-
-
 ## Aperçu
 ![Login page](https://github.com/MelekBadreddine/wellbeing-guide/blob/assets/login.png)
 ![patien home page](https://github.com/MelekBadreddine/wellbeing-guide/blob/assets/patient.png)
@@ -16,6 +12,7 @@ Wellbeing Guide est une plateforme mobile complète conçue pour fournir un sout
 ![Settings section for doctor](https://github.com/MelekBadreddine/wellbeing-guide/blob/assets/settings.png)
 
 
+## Fonctionnalités principales
 ### Pour les patients
 
 - **Authentification sécurisée**: Inscription, connexion, récupération de mot de passe par e-mail et déconnexion sécurisée.
