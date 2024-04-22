@@ -9,7 +9,7 @@ Wellbeing Guide est une plateforme mobile complète conçue pour fournir un sout
 ## Aperçu
 
 ![Capture d'écran 1]([https://i.imgur.com/xxxxxxx.png](https://imgur.com/bzQu377))
-
+![Capture d'écran 2](https://imgur.com/bzQu377)
 
 
 ### Pour les patients
