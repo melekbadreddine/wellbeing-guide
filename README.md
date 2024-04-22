@@ -7,7 +7,6 @@ Wellbeing Guide est une plateforme mobile complète conçue pour fournir un sout
 
 
 ## Aperçu
-<img src="[chemin_vers_votre_image](https://github.com/MelekBadreddine/wellbeing-guide/blob/assets/login.png)" alt="Texte alternatif" width="50%">
 ![Login page](https://github.com/MelekBadreddine/wellbeing-guide/blob/assets/login.png)
 ![patien home page](https://github.com/MelekBadreddine/wellbeing-guide/blob/assets/patient.png)
 ![Chatbot](https://github.com/MelekBadreddine/wellbeing-guide/blob/assets/chatbot.png)
