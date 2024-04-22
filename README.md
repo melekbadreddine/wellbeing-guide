@@ -4,6 +4,14 @@ Wellbeing Guide est une plateforme mobile complète conçue pour fournir un sout
 
 ## Fonctionnalités principales
 
+
+
+## Aperçu
+
+![Capture d'écran 1]([https://i.imgur.com/xxxxxxx.png](https://imgur.com/bzQu377))
+
+
+
 ### Pour les patients
 
 - **Authentification sécurisée**: Inscription, connexion, récupération de mot de passe par e-mail et déconnexion sécurisée.
