@@ -1,3 +1,4 @@
+import 'package:wellbeingGuide/doctor/doctor_home.dart';
 import 'package:wellbeingGuide/doctor/patient_detail.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -39,7 +40,17 @@ class _PatientsListState extends State<PatientsList> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('My Patients'),
+        title: Text('Patients'),
+        backgroundColor: Colors.teal,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => HomeScreen()),
+            );
+          },
+        ),
       ),
       body: ListView.builder(
         itemCount: _patientList.length,
@@ -76,7 +87,7 @@ class _PatientsListState extends State<PatientsList> {
 
               return ListTile(
                 leading: CircleAvatar(
-                  backgroundImage: NetworkImage(avatarUrl),
+                  backgroundImage: AssetImage(avatarUrl),
                 ),
                 title: Text(name),
                 onTap: () {

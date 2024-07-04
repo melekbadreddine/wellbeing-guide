@@ -86,7 +86,7 @@ class _PatientProfileScreenState extends State<PatientProfileScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.indigo[800],
+        backgroundColor: Colors.teal[300],
         title: const Text('Patient Profile'),
       ),
       body: SingleChildScrollView(
@@ -104,7 +104,7 @@ class _PatientProfileScreenState extends State<PatientProfileScreen> {
                     style: TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
-                      color: Colors.indigo[800],
+                      color: Colors.teal[300],
                     ),
                   ),
                   subtitle: Text(
@@ -116,7 +116,7 @@ class _PatientProfileScreenState extends State<PatientProfileScreen> {
                   ),
                   trailing: CircleAvatar(
                     radius: 30,
-                    backgroundImage: NetworkImage(patientInfo['avatarUrl'] ?? ''),
+                    backgroundImage: AssetImage('assets/images/anonymous.png'),
                   ),
                 ),
                 SizedBox(height: 24),
@@ -135,7 +135,7 @@ class _PatientProfileScreenState extends State<PatientProfileScreen> {
                           style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
-                            color: Colors.indigo[800],
+                            color: Colors.teal[300],
                           ),
                         ),
                         Divider(height: 20, thickness: 1),
@@ -167,7 +167,7 @@ class _PatientProfileScreenState extends State<PatientProfileScreen> {
                           style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
-                            color: Colors.indigo[800],
+                            color: Colors.teal[300],
                           ),
                         ),
                         Divider(height: 20, thickness: 1),
@@ -188,7 +188,7 @@ class _PatientProfileScreenState extends State<PatientProfileScreen> {
                   child: ElevatedButton(
                     onPressed: navigateToFormHistory,
                     style: ElevatedButton.styleFrom(
-                      primary: Colors.indigo[800],
+                      primary: Colors.cyan[300],
                       padding: EdgeInsets.symmetric(horizontal: 32, vertical: 16),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(24),

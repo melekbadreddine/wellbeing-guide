@@ -69,7 +69,7 @@ class _HomeScreenState extends State<HomeScreen> {
     children: [
       DrawerHeader(
         decoration: BoxDecoration(
-          color: Colors.blue,
+          color: Colors.teal[300],
         ),
         child: Text(
           'Settings',
@@ -133,39 +133,13 @@ class _HomeScreenState extends State<HomeScreen> {
             leading: Text('08:45pm\nAug 14'),
             title: Row(
               children: [
-                Expanded(
-                  child: CircleAvatar(
-                    backgroundImage: AssetImage('assets/images/patient1.jpg'),
+                
+                  CircleAvatar(
+                    backgroundImage: AssetImage('assets/images/anonymous.png'),
                   ),
-                ),
+                
                 SizedBox(width: 8.0),
-                Expanded(
-                  flex: 2,
-                  child: Container(
-                    padding: EdgeInsets.all(16.0),
-                    decoration: BoxDecoration(
-                      color: Colors.blue,
-                      borderRadius: BorderRadius.circular(8.0),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Micahael Simpson',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        SizedBox(height: 8.0),
-                        ElevatedButton(
-                          onPressed: () {},
-                          child: Text('Join the call'),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
+                
                 SizedBox(width: 8.0),
               ],
             ),
@@ -195,19 +169,21 @@ class _HomeScreenState extends State<HomeScreen> {
               ..._patientList.map((patientId) => FutureBuilder<DocumentSnapshot<Map<String, dynamic>>>(
                 future: _firestore.collection('user_info').doc(patientId).get(),
                 builder: (context, snapshot) {
-                  if (snapshot.hasData && snapshot.data!.exists) {
-                    String avatarUrl = snapshot.data!.data()!['avatarUrl'];
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                      child: CircleAvatar(
-                        backgroundImage: NetworkImage(avatarUrl),
-                      ),
-                    );
-                  } else {
-                    return SizedBox();
-                  }
-                },
-              )).toList(),
+    if (snapshot.hasData && snapshot.data!.exists) {
+      String? avatarUrl = snapshot.data!.data()?['avatarUrl'];
+      return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+        child: CircleAvatar(
+          backgroundImage: avatarUrl != null
+              ? NetworkImage(avatarUrl)
+              : const AssetImage('assets/images/anonymous.png') as ImageProvider,
+        ),
+      );
+    } else {
+      return const SizedBox();
+    }
+  },
+)).toList()
             ],
           ),
           SizedBox(height: 16.0),
@@ -216,9 +192,12 @@ class _HomeScreenState extends State<HomeScreen> {
             children: [
               Text('Last enquiries'),
               ElevatedButton(
-                onPressed: () {},
-                child: Text('Reports'),
-              ),
+  onPressed: () {},
+  style: ElevatedButton.styleFrom(
+    primary: Colors.cyan[300], // Set the background color to cyan[300]
+  ),
+  child: Text('Reports'),
+),
             ],
           ),
         ],

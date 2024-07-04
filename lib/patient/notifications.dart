@@ -47,7 +47,7 @@ class _NotificationsState extends State<Notifications> {
                   snapshot.data!.docs[index].data() as Map<String, dynamic>;
               return ListTile(
                 leading: CircleAvatar(
-                  backgroundImage: NetworkImage(notificationData['avatarUrl']),
+                  backgroundImage: AssetImage('assets/images/anonymous.png'),
                 ),
                 title: FutureBuilder<String?>(
                   future: fetchUserName(notificationData['patientId']),
